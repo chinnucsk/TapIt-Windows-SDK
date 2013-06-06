@@ -10,6 +10,7 @@ using Microsoft.Phone.Shell;
 using TapIt_WP8_TestApp.Resources;
 using TapIt_WP8;
 using Microsoft.Phone.Tasks;
+using System.Diagnostics;
 
 namespace TapIt_WP8_TestApp
 {
@@ -35,7 +36,7 @@ namespace TapIt_WP8_TestApp
             (Application.Current as TapIt_WP8_TestApp.App).App_Activated +=
                           new EventHandler(MainPage_AppActivated);
 
-            tapItAdView = new AdView();
+            tapItAdView = new BannerAdView();
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
         }
@@ -63,27 +64,72 @@ namespace TapIt_WP8_TestApp
         ///<summary>
         ///dispaly ad
         ///</summary>
-        private async void Banner_Ad_Click(object sender, RoutedEventArgs e)
+        private void Banner_Ad_Click(object sender, RoutedEventArgs e)
         {
+            progressring.Visibility = System.Windows.Visibility.Visible;
             object obj = ContentPanel.FindName("TapItAdViewControl");
             if (obj != null)
-                return; // Ad View already added.
+            {
+                // Ad View already added.
+                tapItAdView.Visible = Visibility.Visible;
+                progressring.Visibility = System.Windows.Visibility.Collapsed;
+                return;
+            }
 
             //tapItAdView.BaseURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php";
+            tapItAdView.Visible = System.Windows.Visibility.Collapsed;
             tapItAdView.Height = 80;
-            int tempWidth = tapItAdView.Width;
+            tapItAdView.Width = 480;
             tapItAdView.Margin = new Thickness(0, 400, 0, 0);
             ContentPanel.Children.Add(tapItAdView.ViewControl);
-            tapItAdView.PageLoaded += tapItAdView_PageLoaded;
-            bool display = await tapItAdView.Show();
+
+            //attached events
+            tapItAdView.ControlLoaded += tapItAdView_loaded;
+            tapItAdView.ContentLoaded += tapItAdView_LoadCompleted;
+            tapItAdView.ErrorEvent += tapItAdView_ErrorEvent;
+            tapItAdView.Navigating += tapItAdView_navigating;
+            tapItAdView.Navigated += tapItAdView_navigated;
+            tapItAdView.NavigationFailed += tapItAdView_navigationFailed;
         }
 
-        void tapItAdView_PageLoaded(object sender, NavigationEventArgs e)
+        void tapItAdView_navigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            MessageBox.Show("tapItAdView_PageLoaded");
+            Debug.WriteLine("tapItAdView_navigationFailed");
+        }
+
+        void tapItAdView_navigated(object sender, NavigationEventArgs e)
+        {
+            Debug.WriteLine("tapItAdView_navigated");
+        }
+
+        void tapItAdView_navigating(object sender, NavigatingEventArgs e)
+        {
+            Debug.WriteLine("tapItAdView_navigating");
+        }
+
+        private async void tapItAdView_loaded(object sender, RoutedEventArgs e)
+        {
+            bool display = await tapItAdView.Load();
+        }
+
+        void tapItAdView_ErrorEvent(string strErrorMsg)
+        {
+            Debug.WriteLine("tapItAdView_ErrorEvent :" + strErrorMsg);
+        }
+
+        void tapItAdView_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            MessageBox.Show("tapItAdView_LoadCompleted");
+            progressring.Visibility = Visibility.Collapsed;
+            tapItAdView.Visible = Visibility.Visible;
         }
 
         #endregion
+
+        private void HideBtn_Click(object sender, RoutedEventArgs e)
+        {
+            tapItAdView.Visible = Visibility.Collapsed;
+        }
 
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()

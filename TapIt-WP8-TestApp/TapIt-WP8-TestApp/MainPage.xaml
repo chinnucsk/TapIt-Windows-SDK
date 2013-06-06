@@ -46,8 +46,10 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button x:Name="Banner_Ad" Content="Banner Ad" HorizontalAlignment="Left" Margin="284,10,0,0" VerticalAlignment="Top" Width="172" Click="Banner_Ad_Click" />
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="20,0,12,0">
+            <Button x:Name="Banner_Ad" Content="Banner Ad" HorizontalAlignment="Left" VerticalAlignment="Top" Width="172" Click="Banner_Ad_Click" />
+            <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="98,295,0,0" VerticalAlignment="Top" Width="295" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
+            <Button x:Name="HideBtn" Content="Hide" HorizontalAlignment="Left" Margin="276,0,0,0" VerticalAlignment="Top" Width="172" Click="HideBtn_Click"/>
 
         </Grid>
 
