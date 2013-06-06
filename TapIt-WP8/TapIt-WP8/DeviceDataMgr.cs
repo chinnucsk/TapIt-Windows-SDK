@@ -3,6 +3,7 @@ using Microsoft.Phone.Net.NetworkInformation;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -29,11 +30,48 @@ namespace TapIt_WP8
         string _deviceID = String.Empty;
         double _latitude = 0;
         double _longitude = 0;
-        string _userAgent = "Mozilla/5.0(compatible;MSIE 10.0;Windows phone 8.0;Trident/6.0;IEMobile/10.0;ARM;Touch)";
+        string _userAgent = String.Empty;
+        string _osVersion = String.Empty;
+        int _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
+        private static DeviceDataMgr _instance;
+        Version _version;
+
+        #endregion
+
+        #region enum
+
+        public enum ConnectionSpeed
+        {
+            Unknown = -1,
+            Low_Speed = 0,
+            High_Speed = 1
+        }
 
         #endregion
 
         #region Property
+
+        public static DeviceDataMgr Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DeviceDataMgr();
+                }
+                return _instance;
+            }
+        }
+
+        public string OsVersion
+        {
+            get { return _osVersion; }
+        }
+
+        public int ConnectionSpd
+        {
+            get { return _connectionSpd; }
+        }
 
         public string UserAgent
         {
@@ -94,7 +132,7 @@ namespace TapIt_WP8
 
         #region Constructor
 
-        public DeviceDataMgr()
+        private DeviceDataMgr()
         {
             NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
         }
@@ -102,6 +140,27 @@ namespace TapIt_WP8
         #endregion
 
         #region Methods
+
+        private string GetUserAgent()
+        {
+            string strUserAgent = String.Empty;
+
+            switch (OsVersion)
+            {
+                case "7.0":
+                case "7.1":
+                case "7.2": // todo: check for WP7.8
+                    strUserAgent = TapItResource.UserAgent7_1;
+                    break;
+
+                case "8.0":
+                    strUserAgent = TapItResource.UserAgent8_0;
+                    //strUserAgent = "Mozilla%2F5.0+%28Linux%3B+U%3B+Android+2.2%3B+en-us%3B+sdk+Build%2FFRF91%29+AppleWebKit%2F533.1+%28KHTML%2C+like+Gecko%29+Version%2F4.0+Mobile+Safari%2F533.1";
+                    break;
+            }
+
+            return strUserAgent;
+        }
 
         ///<summary>
         ///get the changed network data
@@ -114,7 +173,8 @@ namespace TapIt_WP8
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Debug.WriteLine("Exception in OnNetworkChanged() :" + ex.Message);
+                throw ex;
             }
         }
 
@@ -123,20 +183,60 @@ namespace TapIt_WP8
         ///</summary>
         public void GetdeviceInfo()
         {
-            _mobileOperator = DeviceNetworkInformation.CellularMobileOperator;
-            _isCellularDataEnabled = DeviceNetworkInformation.IsCellularDataEnabled;
-            _isNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable;
-            _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
-            _screenHeight = Convert.ToInt32(Application.Current.Host.Content.ActualHeight);
-            _language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            object uniqueID;
-            if (DeviceExtendedProperties.TryGetValue("DeviceUniqueId", out uniqueID) == true)
+            try
             {
-                byte[] byteID = (byte[])uniqueID;
-                _deviceID = Convert.ToBase64String(byteID);
-            }
+                _version = Environment.OSVersion.Version;
+                _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
+                _userAgent = GetUserAgent();
 
-            GetLocationProperty();
+                //airtel,tatadocomo
+                _mobileOperator = DeviceNetworkInformation.CellularMobileOperator;
+
+                //3g,wifi,gsm
+                _networkType = Microsoft.Phone.Net.NetworkInformation.NetworkInterface.NetworkInterfaceType.ToString();
+
+                //MessageBox.Show("_networkType: " + _networkType);
+                switch (_networkType)
+                {
+                    // The network interface uses an Ethernet connection. Ethernet is defined in
+                    // IEEE standard 802.3. This is used for desktop pass-through.
+                    case "Ethernet":
+                    // The network interface uses a wireless LAN connection (IEEE 802.11 standard).
+                    // This is used for any Wi-Fi (802.11, Bluetooth, and so on).
+                    case "Wireless80211":
+                    // The network interface uses a GSM cellular network.                
+                    case "MobileBroadbandGsm":
+                    // The network interface uses a CDMA cellular network.
+                    case "MobileBroadbandCdma":
+                        _connectionSpd = Convert.ToInt32(ConnectionSpeed.High_Speed);
+                        break;
+
+                    // There is no network available for accessing the Internet.
+                    case "None":
+                    default:
+                        _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
+                        break;
+                }
+
+                _isCellularDataEnabled = DeviceNetworkInformation.IsCellularDataEnabled;
+                _isNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable;
+                _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
+                _screenHeight = Convert.ToInt32(Application.Current.Host.Content.ActualHeight);
+                _language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                object uniqueID;
+                if (DeviceExtendedProperties.TryGetValue("DeviceUniqueId", out uniqueID) == true)
+                {
+                    byte[] byteID = (byte[])uniqueID;
+                    _deviceID = Convert.ToBase64String(byteID);
+                }
+
+                GetLocationProperty();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in GetdeviceInfo() :" + ex.Message);
+                throw ex;
+            }
         }
 
         ///<summary>

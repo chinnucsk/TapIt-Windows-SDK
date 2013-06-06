@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -38,10 +39,20 @@ namespace TapIt_WP8
         ///</summary>
         public JsonDataContract ParseJson(string jsonResponse)
         {
-            //Serializes objects to the JavaScript 
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(JsonDataContract));
-            MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(jsonResponse));
-            JsonDataContract jsonHlpr = (JsonDataContract)jsonSerializer.ReadObject(ms);
+            JsonDataContract jsonHlpr = null;
+            try
+            {
+                //Serializes objects to the JavaScript 
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(JsonDataContract));
+                MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(jsonResponse));
+                jsonHlpr = (JsonDataContract)jsonSerializer.ReadObject(ms);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in ParseJson() :" + ex.Message);
+                throw ex;
+            }
+
             return jsonHlpr;
         }
 
