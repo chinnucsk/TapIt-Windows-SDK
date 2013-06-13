@@ -1,4 +1,5 @@
-﻿using Microsoft.Phone.Info;
+﻿using Microsoft.Phone.Controls;
+using Microsoft.Phone.Info;
 using Microsoft.Phone.Net.NetworkInformation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,9 @@ using System.Device.Location;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +38,7 @@ namespace TapIt_WP8
         int _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
         private static DeviceDataMgr _instance;
         Version _version;
+        PageOrientation _orientation;
 
         #endregion
 
@@ -61,6 +65,11 @@ namespace TapIt_WP8
                 }
                 return _instance;
             }
+        }
+
+        public PageOrientation Orientation
+        {
+            get { return _orientation; }
         }
 
         public string OsVersion
@@ -185,6 +194,8 @@ namespace TapIt_WP8
         {
             try
             {
+                _orientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+
                 _version = Environment.OSVersion.Version;
                 _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
                 _userAgent = GetUserAgent();

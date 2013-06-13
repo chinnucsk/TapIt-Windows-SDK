@@ -30,6 +30,16 @@ namespace TapIt_WP8
 
         [DataMember(Name = "adWidth")]
         public string adWidth;
+
+        [DataMember(Name = "adtitle")]
+        public string adtitle;
+
+        [DataMember(Name = "calltoaction")]
+        public string calltoaction;
+
+        [DataMember(Name = "declinestring")]
+        public string declinestring;
+        
     }
 
     public class JsonParser

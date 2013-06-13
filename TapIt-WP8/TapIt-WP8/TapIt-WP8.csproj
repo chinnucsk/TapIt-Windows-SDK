@@ -84,8 +84,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AdView.cs" />
+    <Compile Include="AlertAdView.cs" />
     <Compile Include="BannerAdView.cs" />
     <Compile Include="DeviceDataMgr.cs" />
+    <Compile Include="InterstitialAdView.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TapItHttpRequest.cs" />
@@ -100,6 +102,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TapItResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\interstitial_close_button%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
