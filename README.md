@@ -4,14 +4,14 @@ Version 0.1 - This software is currently in development, don't expect it to work
 
 This is the WP8 SDK for the TapIt! mobile ad network. Go to http://tapit.com/ for more details and to sign up.
 
-Usage:
+Usage
 ---------
 The SDK can be downloaded from https://github.com/tapit/TapIt-Windows-SDK/tree/master/TapIt-WP8 . 
 Copy the /TapIt-WP8 folders into your Visual studio project. In your project, right click on the references folder and add reference of TapIt-WP8 to your project.
 
 Banner Usage
 -------------------
-````
+````csharp
 // in your xaml.cs file
 
 using TapIt_WP8; // Adding namespace
@@ -26,7 +26,7 @@ ContentPanel.Children.Add (_bannerAdView.ViewControl);
 
 
 // set the banner ad parameters and kick off banner rotation!
-_bannerAdView.ZoneId = 14999; 
+_bannerAdView.ZoneId = 1234; // Insert your zone id here
 _bannerAdView.AnimationTimeInterval = 10;
 _bannerAdView.AnimationDuration = 4;
 
@@ -45,7 +45,7 @@ https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-W
 
 Interstitial Usage
 -----------------------
-````
+````csharp
 // in your xaml.cs file
 
 using TapIt_WP8; // Adding namespace
@@ -58,7 +58,7 @@ _interstitialAdView = new InterstitialAdView();
 ContentPanel.Children.Add(_interstitialAdView.ViewControl);
 
 // set the Interstitial ad parameters	
-    _interstitialAdView.ZoneId = 14999; 
+    _interstitialAdView.ZoneId = 1234; // Insert your zone id here
 
 // load the ad
 _interstitialAdView.LoadAndNavigate();
@@ -77,7 +77,7 @@ Adprompt Usage
 AdPrompts are a simple ad unit designed to have a native feel.  The user is given the option to download an app, 
 and if they accept, they are taken to the marketplace.
 
-````
+````csharp
 // in your xaml.cs file
 
 using TapIt_WP8; // Adding namespace
@@ -89,7 +89,7 @@ using TapIt_WP8; // Adding namespace
 _tapItAdView = new AlertAdView();
 
 // set the alert ad parameters 
-_tapItAdView.ZoneId = 15501;
+_tapItAdView.ZoneId = 1234; // Insert your zone id here
 
 // load the ad
 _tapItAdView.Load();
