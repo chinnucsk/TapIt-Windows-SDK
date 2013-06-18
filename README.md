@@ -1,6 +1,6 @@
 TapIt Windows Phone SDK
 =======================
-Version 0.1 - This software is currently in development, don't expect it to work yet!
+Version 0.1 - __This software is currently in development, don't expect it to work yet!__
 
 This is the WP8 SDK for the TapIt! mobile ad network. Go to http://tapit.com/ for more details and to sign up.
 
@@ -16,25 +16,24 @@ Banner Usage
 
 using TapIt_WP8; // Adding namespace
 
+
 // Data member
-  BannerAdView _bannerAdView;
+BannerAdView _bannerAdView;
+
 
 // initialize banner and add to your page (constructor)
 _bannerAdView = new BannerAdView();
 _bannerAdView.ViewControl.SetValue (Grid.RowProperty, 2);
 ContentPanel.Children.Add (_bannerAdView.ViewControl);
 
-
 // set the banner ad parameters and kick off banner rotation!
 _bannerAdView.ZoneId = 1234; // Insert your zone id here
-_bannerAdView.AnimationTimeInterval = 10;
-_bannerAdView.AnimationDuration = 4;
 
 // load the ad
 _bannerAdView.LoadAndNavigate();
 
 // show the ad
- _bannerAdView.Visible = Visibility.Visible;
+_bannerAdView.Visible = Visibility.Visible;
 
 // hide the ad
 _bannerAdView.Visible = Visibility.Collapsed;
@@ -50,15 +49,17 @@ Interstitial Usage
 
 using TapIt_WP8; // Adding namespace
 
+
 // Data member
-  InterstitialAdView _interstitialAdView;
+InterstitialAdView _interstitialAdView;
+
 
 // initialize interstitial and add to your page (constructor)
 _interstitialAdView = new InterstitialAdView();
 ContentPanel.Children.Add(_interstitialAdView.ViewControl);
 
 // set the Interstitial ad parameters	
-    _interstitialAdView.ZoneId = 1234; // Insert your zone id here
+_interstitialAdView.ZoneId = 1234; // Insert your zone id here
 
 // load the ad
 _interstitialAdView.LoadAndNavigate();
@@ -83,7 +84,7 @@ and if they accept, they are taken to the marketplace.
 using TapIt_WP8; // Adding namespace
 
 // Data member
-    AlertAdView _tapItAdView;
+AlertAdView _tapItAdView;
 
 // initialize Alert ad and add to your page (constructor)
 _tapItAdView = new AlertAdView();
