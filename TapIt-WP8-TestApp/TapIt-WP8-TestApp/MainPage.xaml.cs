@@ -44,7 +44,7 @@ namespace TapIt_WP8_TestApp
 
         private void AlertAd_Click(object sender, EventArgs e)
         {
-            this.NavigationService.Navigate(new Uri("/AlertAdPage.xaml", UriKind.RelativeOrAbsolute));
+            this.NavigationService.Navigate(new Uri("/AdPromptPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         // Sample code for building a localized ApplicationBar

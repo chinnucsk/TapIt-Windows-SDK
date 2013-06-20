@@ -9,6 +9,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using TapIt_WP8;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TapIt_WP8_TestApp
 {
@@ -25,6 +26,7 @@ namespace TapIt_WP8_TestApp
         public BannerAdPage()
         {
             InitializeComponent();
+
             // Set the event handler for when the application deactivated
             (Application.Current as TapIt_WP8_TestApp.App).App_Deactivated +=
                           new EventHandler(MainPage_AppDeactivated);
@@ -33,7 +35,22 @@ namespace TapIt_WP8_TestApp
             (Application.Current as TapIt_WP8_TestApp.App).App_Activated +=
                           new EventHandler(MainPage_AppActivated);
 
+            //Initialize the view
             _bannerAdView = new BannerAdView();
+
+            _bannerAdView.Visible = Visibility.Collapsed;
+            _bannerAdView.ZoneId = 25254;//2720;          //zone id for TapIt
+            //_bannerAdView.ZoneId = 15087;                  //zone id for local server
+            _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
+            ContentPanel.Children.Add(_bannerAdView.ViewControl);
+
+            //attached events
+            _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
+            _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
+            _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
+            _bannerAdView.Navigating += _bannerAdView_navigating;
+            _bannerAdView.Navigated += _bannerAdView_navigated;
+            _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
         }
 
         #endregion
@@ -49,20 +66,12 @@ namespace TapIt_WP8_TestApp
                 // Ad View already added.
                 _bannerAdView.Visible = Visibility.Visible;
                 progressring.Visibility = System.Windows.Visibility.Collapsed;
-                return;
             }
-            _bannerAdView.Visible = System.Windows.Visibility.Collapsed;
-            _bannerAdView.ZoneId = 14999;
-            _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
-            ContentPanel.Children.Add(_bannerAdView.ViewControl);
+        }
 
-            //attached events
-            _bannerAdView.ControlLoaded += _bannerAdView_loaded;
-            _bannerAdView.ContentLoaded += _bannerAdView_LoadCompleted;
-            _bannerAdView.ErrorEvent += _bannerAdView_ErrorEvent;
-            _bannerAdView.Navigating += _bannerAdView_navigating;
-            _bannerAdView.Navigated += _bannerAdView_navigated;
-            _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
+        private void DeviceOrientationChanged(object sender, OrientationChangedEventArgs e)
+        {
+            _bannerAdView.DeviceOrientationChanged(e.Orientation);
         }
 
         #endregion
@@ -85,47 +94,72 @@ namespace TapIt_WP8_TestApp
             _bannerAdView.AppDeactivated();
         }
 
+        /// <summary>
+        ///  // This event is fired when the web browser navigation fails.
+        /// </summary>
         void _bannerAdView_navigationFailed(object sender, NavigationFailedEventArgs e)
         {
             Debug.WriteLine("_bannerAdView_navigationFailed");
+            MessageBox.Show("_bannerAdView_navigationFailed");
         }
 
+        /// <summary>
+        ///  // This event is fired when the web browser is navigated to a url.
+        /// </summary>
         void _bannerAdView_navigated(object sender, NavigationEventArgs e)
         {
             Debug.WriteLine("_bannerAdView_navigated");
         }
 
+        /// <summary>
+        ///  // The event is fired when user clicks on the web browser.
+        /// </summary>
         void _bannerAdView_navigating(object sender, NavigatingEventArgs e)
         {
             Debug.WriteLine("_bannerAdView_navigating");
+            MessageBox.Show("_bannerAdView_navigating");
         }
 
-        private async void _bannerAdView_loaded(object sender, RoutedEventArgs e)
+        ///<summary>
+        /// //this event is fired when control is loaded
+        ///</summary>
+        private void _bannerAdView_controlLoaded(object sender, RoutedEventArgs e)
         {
-            bool display = await _bannerAdView.LoadAndNavigate();
+            MessageBox.Show("_bannerAdView_controlLoaded");
+        }
+
+        ///<summary>
+        /// //this event is fired when error occurs
+        ///</summary>
+        void _bannerAdView_errorEvent(string strErrorMsg)
+        {
+            Debug.WriteLine("_bannerAdView_ErrorEvent :" + strErrorMsg);
+            MessageBox.Show(strErrorMsg);
+        }
+
+        ///<summary>
+        /// //this event is fired when contents are loaded
+        ///</summary>
+        void _bannerAdView_contentLoaded(object sender, NavigationEventArgs e)
+        {
+            _bannerAdView.Visible = Visibility.Collapsed;
+            MessageBox.Show("_bannerAdView_LoadCompleted");
+        }
+
+        private void hideBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _bannerAdView.Visible = Visibility.Collapsed;
+        }
+
+        private void loadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Task<bool> display = _bannerAdView.Load();
             progressring.Visibility = Visibility.Collapsed;
             _bannerAdView.AnimationTimeInterval = 10;
             _bannerAdView.AnimationDuration = 4;
         }
 
-        void _bannerAdView_ErrorEvent(string strErrorMsg)
-        {
-            Debug.WriteLine("_bannerAdView_ErrorEvent :" + strErrorMsg);
-        }
-
-        void _bannerAdView_LoadCompleted(object sender, NavigationEventArgs e)
-        {
-            MessageBox.Show("_bannerAdView_LoadCompleted");
-            progressring.Visibility = Visibility.Collapsed;
-            _bannerAdView.Visible = Visibility.Visible;
-        }
-
-        private void hideBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _bannerAdView.Visible = System.Windows.Visibility.Collapsed;
-        }
-
-        private void loadBtn_Click(object sender, RoutedEventArgs e)
+        private void showBtn_Click(object sender, RoutedEventArgs e)
         {
             loadBannerAd();
         }

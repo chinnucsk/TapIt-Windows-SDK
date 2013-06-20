@@ -9,9 +9,9 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="PortraitOrLandscape" 
+    SupportedOrientations="PortraitOrLandscape" OrientationChanged="DeviceOrientationChanged"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True" BackKeyPress="PhoneApplicationPage_BackKeyPress_1">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -43,7 +43,7 @@
             <TextBlock HorizontalAlignment="Left"  TextWrapping="Wrap" Text="Alert Ad" VerticalAlignment="Top" Height="52" Width="203" FontSize="42" Foreground="#FF0C64AE" Margin="121,0,0,0"/>
             <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="98,295,0,0" VerticalAlignment="Top" Width="295" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
             <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left" Margin="0,69,0,0" VerticalAlignment="Top" Click="loadBtn_Click" Width="112" Background="#FF3169E0"/>
-            <Button Content="Show" Visibility="Collapsed" Name="ShowBtn" HorizontalAlignment="Left" Margin="170,69,0,0" VerticalAlignment="Top" Click="loadBtn_Click" Width="112" Background="#FF3169E0"/>
+            <Button Content="Show" Visibility="Visible" Name="showBtn" HorizontalAlignment="Left" Margin="133,69,0,0" VerticalAlignment="Top"  Width="112" Background="#FF3169E0" Click="showBtn_Click"/>
         </Grid>
     </Grid>
 

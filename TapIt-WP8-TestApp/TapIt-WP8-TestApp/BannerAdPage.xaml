@@ -9,7 +9,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="PortraitOrLandscape"
+    SupportedOrientations="PortraitOrLandscape" OrientationChanged="DeviceOrientationChanged"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
@@ -36,13 +36,14 @@
                 <ImageBrush Stretch="Fill" ImageSource="/images/Background.jpg"/>
             </Grid.Background>
             <Grid.RowDefinitions>
-                <RowDefinition Height="85*"></RowDefinition>
-                <RowDefinition Height="15*"></RowDefinition>
+                <RowDefinition Height="80*"></RowDefinition>
+                <RowDefinition Height="20*"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock HorizontalAlignment="Left"  TextWrapping="Wrap" Text="Banner Ad" VerticalAlignment="Top" Height="52" Width="203" FontSize="42" Foreground="#FF0C64AE" Margin="121,0,0,0"/>
-            <Button Content="Hide" Visibility="Visible" Name="hideBtn" HorizontalAlignment="Left" Margin="137,69,0,0" VerticalAlignment="Top" Width="112" Click="hideBtn_Click" Background="#FF3169E0"/>
+            <Button Content="Hide" Visibility="Visible" Name="hideBtn" HorizontalAlignment="Left" Margin="294,69,0,0" VerticalAlignment="Top" Width="112" Click="hideBtn_Click" Background="#FF3169E0"/>
             <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="98,295,0,0" VerticalAlignment="Top" Width="295" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
             <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left" Margin="0,69,0,0" VerticalAlignment="Top" Click="loadBtn_Click" Width="112" Background="#FF3169E0"/>
+            <Button Content="Show" x:Name="showBtn" HorizontalAlignment="Left" Margin="139,69,0,0" VerticalAlignment="Top"  Width="112" Background="#FF3169E0" Click="showBtn_Click"/>
         </Grid>
     </Grid>
 
