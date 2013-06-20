@@ -83,8 +83,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AdPromptView.cs" />
     <Compile Include="AdView.cs" />
-    <Compile Include="AlertAdView.cs" />
+    <Compile Include="AdViewBase.cs" />
     <Compile Include="BannerAdView.cs" />
     <Compile Include="DeviceDataMgr.cs" />
     <Compile Include="InterstitialAdView.cs" />
@@ -105,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\interstitial_close_button%402x.png" />
+    <Content Include="Images\Test_Image.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

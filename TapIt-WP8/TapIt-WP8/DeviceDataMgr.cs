@@ -38,7 +38,8 @@ namespace TapIt_WP8
         int _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
         private static DeviceDataMgr _instance;
         Version _version;
-        PageOrientation _orientation;
+        PageOrientation _pageOrientation = PageOrientation.None;
+        string _pageOrientationVal = "p";
 
         #endregion
 
@@ -67,9 +68,29 @@ namespace TapIt_WP8
             }
         }
 
-        public PageOrientation Orientation
+        public string PageOrientationVal
         {
-            get { return _orientation; }
+            get { return _pageOrientationVal; }
+        }
+
+        public PageOrientation PageOrientation
+        {
+            get { return _pageOrientation; }
+            set
+            {
+                _pageOrientation = value;
+
+                if (PageOrientation.LandscapeRight == value ||
+                    PageOrientation.LandscapeLeft == value)
+                {
+                    _pageOrientationVal = "l";
+                }
+                else if (PageOrientation.PortraitDown == value ||
+                    PageOrientation.PortraitUp == value)
+                {
+                    _pageOrientationVal = "p";
+                }
+            }
         }
 
         public string OsVersion
@@ -144,31 +165,39 @@ namespace TapIt_WP8
         private DeviceDataMgr()
         {
             NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
+            UpdateDeviceStaticData();
+            UpdateDeviceInfo();
         }
 
         #endregion
 
         #region Methods
 
-        private string GetUserAgent()
+        private void GetUserAgent()
         {
-            string strUserAgent = String.Empty;
+            if (!String.IsNullOrEmpty(_userAgent))
+                return;
 
-            switch (OsVersion)
-            {
-                case "7.0":
-                case "7.1":
-                case "7.2": // todo: check for WP7.8
-                    strUserAgent = TapItResource.UserAgent7_1;
-                    break;
+            string uaHtml = "<!DOCTYPE HTML> " +
+                "<html> " +
+                "<head> " +
+                "<script language=\"javascript\" type=\"text/javascript\"> " +
+                "function notifyUserAgent() { window.external.notify(navigator.userAgent); } " +
+                "</script> " +
+                "</head> " +
+                "<body onload=\"notifyUserAgent()\"> " +
+                "</body> " +
+                "</html> ";
 
-                case "8.0":
-                    strUserAgent = TapItResource.UserAgent8_0;
-                    //strUserAgent = "Mozilla%2F5.0+%28Linux%3B+U%3B+Android+2.2%3B+en-us%3B+sdk+Build%2FFRF91%29+AppleWebKit%2F533.1+%28KHTML%2C+like+Gecko%29+Version%2F4.0+Mobile+Safari%2F533.1";
-                    break;
-            }
+            WebBrowser webBrowser = new WebBrowser();
+            webBrowser.IsScriptEnabled = true;
+            webBrowser.ScriptNotify += webBrowser_ScriptNotify;
+            webBrowser.NavigateToString(uaHtml);
+        }
 
-            return strUserAgent;
+        private void webBrowser_ScriptNotify(object sender, NotifyEventArgs e)
+        {
+            _userAgent = e.Value;
         }
 
         ///<summary>
@@ -187,26 +216,50 @@ namespace TapIt_WP8
             }
         }
 
-        ///<summary>
-        ///collection of device parameters
-        ///</summary>
-        public void GetdeviceInfo()
+        public void UpdateDeviceInfoWithLocation()
+        {
+            UpdateDeviceInfo();
+            UpateLocation();
+        }
+
+        public void UpdateDeviceStaticData()
         {
             try
             {
-                _orientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
-
+                GetUserAgent();
                 _version = Environment.OSVersion.Version;
                 _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
-                _userAgent = GetUserAgent();
 
-                //airtel,tatadocomo
+                _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
+                _screenHeight = Convert.ToInt32(Application.Current.Host.Content.ActualHeight);
+
+                object uniqueID;
+                if (DeviceExtendedProperties.TryGetValue("DeviceUniqueId", out uniqueID) == true)
+                {
+                    byte[] byteID = (byte[])uniqueID;
+                    _deviceID = Convert.ToBase64String(byteID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in GetdeviceInfo() :" + ex.Message);
+                throw ex;
+            }
+        }
+
+        ///<summary>
+        ///collection of device parameters
+        ///</summary>
+        public void UpdateDeviceInfo()
+        {
+            try
+            {
+                PageOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+
+                // _mobileOperator = "Android"; // temp code for test purpose
                 _mobileOperator = DeviceNetworkInformation.CellularMobileOperator;
 
-                //3g,wifi,gsm
                 _networkType = Microsoft.Phone.Net.NetworkInformation.NetworkInterface.NetworkInterfaceType.ToString();
-
-                //MessageBox.Show("_networkType: " + _networkType);
                 switch (_networkType)
                 {
                     // The network interface uses an Ethernet connection. Ethernet is defined in
@@ -231,17 +284,9 @@ namespace TapIt_WP8
 
                 _isCellularDataEnabled = DeviceNetworkInformation.IsCellularDataEnabled;
                 _isNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable;
-                _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
-                _screenHeight = Convert.ToInt32(Application.Current.Host.Content.ActualHeight);
-                _language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-                object uniqueID;
-                if (DeviceExtendedProperties.TryGetValue("DeviceUniqueId", out uniqueID) == true)
-                {
-                    byte[] byteID = (byte[])uniqueID;
-                    _deviceID = Convert.ToBase64String(byteID);
-                }
 
-                GetLocationProperty();
+                //_language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+                _language = CultureInfo.CurrentCulture.ToString();
             }
             catch (Exception ex)
             {
@@ -253,7 +298,7 @@ namespace TapIt_WP8
         ///<summary>
         ///get device location(latitude,longitude)
         ///</summary>
-        public bool GetLocationProperty()
+        public bool UpateLocation()
         {
             bool bRet = false;
             GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();

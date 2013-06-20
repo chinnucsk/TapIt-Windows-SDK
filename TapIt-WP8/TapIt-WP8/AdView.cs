@@ -24,102 +24,41 @@ using Windows.Storage;
 
 namespace TapIt_WP8
 {
-    public abstract class AdView
+    public abstract class AdView : AdViewBase
     {
         #region DataMembers
 
-        private WebBrowser _webBrowser;
         private Grid _maingrid;
+        private WebBrowser _webBrowser;
 
-        private int _width;
-        private int _height;
         private Thickness _margin;
-        protected Visibility _visible = Visibility.Collapsed;
-        //private ViewState _viewState = ViewState.DEFAULT;
-        private AdType _adtype = AdType.Unknown;
-        private int _zoneId = -1;
-
-        //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
-        private string _format = TapItResource.Format;
+        
         private string _htmlResponse = string.Empty; // get the string in html format
-        private string _clickUrl = string.Empty;
-        private JsonDataContract _jsonResponse;
 
         #endregion
 
         #region EventsDecleration
 
-        public event RoutedEventHandler ControlLoaded;
-        public event LoadCompletedEventHandler ContentLoaded;
         public event EventHandler<NavigatingEventArgs> Navigating;
         public event EventHandler<NavigationEventArgs> Navigated;
         public event NavigationFailedEventHandler NavigationFailed;
 
-        public delegate void ErrorEventHandler(string strErrorMsg);
-        public event ErrorEventHandler ErrorEvent;
-
-        #endregion
-
-        #region Enum
-
-        /*private enum ViewState
-        {
-            DEFAULT,
-            RESIZED,
-            EXPANDED,
-            HIDDEN
-        }*/
-
-        public enum AdType
-        {
-            Unknown = -1,
-            Banner_Ad = 1,
-            Interstitial_Ad = 2,
-            Text_Ad = 5,
-            Video_Ad = 6,
-            Offerwall_Ad = 7,
-            Ad_Prompt = 10
-        }
-
         #endregion
 
         #region Property
-
-        public JsonDataContract JsonResponse
-        {
-            get { return _jsonResponse; }
-        }
 
         protected Grid Maingrid
         {
             get { return _maingrid; }
         }
 
-        public int ZoneId
-        {
-            get { return _zoneId; }
-            set { _zoneId = value; }
-        }
-
-        public AdType Adtype
-        {
-            get { return _adtype; }
-            set { _adtype = value; }
-        }
-
-        public virtual Visibility Visible
+        public override Visibility Visible
         {
             get { return _visible; }
             set
             {
                 _maingrid.Visibility = _visible = value;
             }
-        }
-
-        public string ClickUrl
-        {
-            get { return _clickUrl; }
         }
 
         // return control to add in UI tree
@@ -133,28 +72,30 @@ namespace TapIt_WP8
             get { return _webBrowser; }
         }
 
-        public int Width
+        public override int Width
         {
-            get { return _width; }
-            set { _webBrowser.Width = _width = value; }
+            get { return base.Width; }
+            set 
+            {
+                base.Width = value;
+                SetViewWidth(value);
+            }
         }
 
-        public int Height
+        public override int Height
         {
-            get { return _height; }
-            set { _webBrowser.Height = _height = value; }
+            get { return base.Height; }
+            set
+            {
+                base.Height = value;
+                SetViewHeight(value); 
+            }
         }
 
         public Thickness Margin
         {
             get { return _margin; }
             set { _webBrowser.Margin = _margin = value; }
-        }
-
-        public string BaseURL
-        {
-            get { return _baseURL; }
-            set { _baseURL = value; }
         }
 
         #endregion
@@ -166,10 +107,11 @@ namespace TapIt_WP8
             //initailization of grid
             _maingrid = new Grid();
             _maingrid.Name = TapItResource.BrowserName;
-            Maingrid.Background = new SolidColorBrush(Colors.Gray);
+            Maingrid.Background = new SolidColorBrush(Colors.Blue);
 
             //nitailization of browser control
             _webBrowser = new WebBrowser();
+
             //_webBrowser.Name = TapItResource.BrowserName;
             _webBrowser.Width = Width;
             _webBrowser.Height = Height;
@@ -180,6 +122,15 @@ namespace TapIt_WP8
 
             //events  for main grid
             _maingrid.SizeChanged += _maingrid_SizeChanged;
+
+            ////////////////
+            // temp code - remove
+
+            ////Maingrid.Visibility = Visibility.Visible;
+            ////WebBrowser.Navigate(new Uri("http://172.27.47.147/test", UriKind.Absolute));
+            
+
+            //////////////////
 
             //events  for web control
             _webBrowser.Loaded += _webBrowser_Loaded;
@@ -235,8 +186,7 @@ namespace TapIt_WP8
         {
             Debug.WriteLine("_webBrowser_Loaded");
 
-            if (ControlLoaded != null)
-                ControlLoaded(sender, e);
+            base.OnControlLoad(sender, e);
         }
 
         /// <summary>
@@ -246,8 +196,7 @@ namespace TapIt_WP8
         {
             Debug.WriteLine("_webBrowser_LoadCompleted");
 
-            if (ContentLoaded != null)
-                ContentLoaded(sender, e);
+            base.OnContentLoad(sender, e);
         }
 
         /// <summary>
@@ -255,6 +204,7 @@ namespace TapIt_WP8
         /// </summary>
         void _webBrowser_Navigating(object sender, NavigatingEventArgs e)
         {
+           //// return; // temp - remove
             Debug.WriteLine("_webBrowser_Navigating");
 
             if (Navigating != null)
@@ -268,43 +218,69 @@ namespace TapIt_WP8
 
         #endregion
 
-        #region abstract Methods
-
-        abstract protected void SetAdType();
-
-        abstract protected void SetAdSize(int height, int width);
-
-        #endregion
-
         #region Methods
 
-        //url created using device parameters
-        private string GetAdSrvURL()
+        private void SetViewWidth(int value)
         {
-            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
-            deviceData.GetdeviceInfo();
-            //url creation using tapIt base url.
-            string AdSrvURL = BaseURL + "?" +
-                "w=" + Width +
-                "&h=" + Height +
-                "&languages=" + deviceData.Language +
-                "&ua=" + deviceData.UserAgent +
-                "&udid=" + deviceData.DeviceID +
-                "&connection_speed=" + deviceData.ConnectionSpd +
-                "&carrier=" + deviceData.MobileOperator +
-                "&format=" + _format +
-                "&zone=" + ZoneId +
-                "&adtype=" + Convert.ToInt32(Adtype);
-
-            //url creation using local server url.
-            // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=14999&format=json";
-            Debug.WriteLine("Server Url: " + AdSrvURL);
-            return AdSrvURL;
+            _maingrid.Width = value;
+            _webBrowser.Width = value;
         }
 
-        public async Task<bool> LoadAndNavigate()
+        private void SetViewHeight(int value)
         {
-            bool retVal = await Load();
+            _maingrid.Height = value;
+            _webBrowser.Height = value;
+        }
+
+        protected int GetOrientationWidth()
+        {
+            int width = 0;
+            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
+
+            if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
+                   PageOrientation.LandscapeLeft == deviceData.PageOrientation)
+            {
+                width = deviceData.ScreenHeight;
+            }   
+            else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
+                PageOrientation.PortraitUp == deviceData.PageOrientation)
+            {
+                width = deviceData.ScreenWidth;
+            }
+
+            return width;
+        }
+
+        protected int GetOrientationHeight()
+        {
+            int height = 0;
+            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
+
+            if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
+                   PageOrientation.LandscapeLeft == deviceData.PageOrientation)
+            {
+                height = deviceData.ScreenWidth;
+            }
+            else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
+                PageOrientation.PortraitUp == deviceData.PageOrientation)
+            {
+                height = deviceData.ScreenHeight;
+            }
+
+            return height;
+        }
+
+        protected void SetSizeToScreen(bool isHeight = false)
+        {
+            SetViewWidth(GetOrientationWidth());
+            
+            if (isHeight)
+                SetViewHeight(GetOrientationHeight());
+        }
+
+        public override async Task<bool> Load()
+        {
+            bool retVal = await base.Load();
 
             if (retVal)
             {
@@ -315,37 +291,6 @@ namespace TapIt_WP8
             }
 
             return retVal;
-        }
-
-        ///<summary>
-        ///
-        ///</summary>
-        ///
-        public async Task<bool> Load()
-        {
-            bool isLoaded = false;
-            try
-            {
-                TapItHttpRequest req = new TapItHttpRequest();
-                string response = await req.HttpRequest(GetAdSrvURL());
-                if (response == null || response.Contains("error"))
-                {
-                    Exception ex = new Exception("Response contains error");
-                    throw ex;
-                }
-
-                JsonParser jsnParser = new JsonParser();
-                _jsonResponse = jsnParser.ParseJson(response);
-               
-                isLoaded = true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in Load() :" + ex.Message);
-                RaiseErrorEvent("Exception in Load()", ex);
-            }
-
-            return isLoaded;
         }
 
         private bool JsonToHtml()
@@ -367,7 +312,7 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in JsonToHtml() :" + ex.Message);
-                RaiseErrorEvent("Exception in JsonToHtml()", ex);
+                OnError("Exception in JsonToHtml()", ex);
             }
 
             return isLoaded;
@@ -376,22 +321,6 @@ namespace TapIt_WP8
         private void NavigateToHtml()
         {
             WebBrowser.NavigateToString(_htmlResponse);
-        }
-
-        ///<summary>
-        /// // The helper function to raise error event.
-        ///</summary>
-        private void RaiseErrorEvent(string strMsg, Exception ex = null)
-        {
-            if (ErrorEvent != null)
-            {
-                string str = strMsg;
-
-                if (ex != null)
-                    str += " Exception occured :" + ex.Message;
-
-                ErrorEvent(str);
-            }
         }
 
         ///<summary>
@@ -417,9 +346,14 @@ namespace TapIt_WP8
                 // Store it in the State dictionary.
                 PhoneApplicationService.Current.State["htmlResponse"] = _htmlResponse;
             }
+            else
+            {
+                PhoneApplicationService.Current.State["htmlResponse"] = null;
+            }
         }
 
         #endregion
+
 
     }
 }

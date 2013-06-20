@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BaseUrl" xml:space="preserve">
-    <value>http://r.tapit.com/adrequest.php</value>
+    <value>http://dev.tapit.com/~npenteado/adrequest.php</value>
   </data>
   <data name="BaseUrl_Local" xml:space="preserve">
     <value>http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php</value>
@@ -129,10 +129,13 @@
   <data name="Format" xml:space="preserve">
     <value>json</value>
   </data>
+  <data name="SdkVersion" xml:space="preserve">
+    <value>wp-v1.0.0</value>
+  </data>
   <data name="UserAgent7_1" xml:space="preserve">
     <value>Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0)</value>
   </data>
   <data name="UserAgent8_0" xml:space="preserve">
-    <value>Mozilla/5.0(compatible;MSIE 10.0;Windows phone 8.0;Trident/6.0;IEMobile/10.0;ARM;Touch)</value>
+    <value>Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 820)</value>
   </data>
 </root>

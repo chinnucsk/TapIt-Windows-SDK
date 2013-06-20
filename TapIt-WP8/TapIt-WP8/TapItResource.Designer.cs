@@ -61,7 +61,7 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://r.tapit.com/adrequest.php.
+        ///   Looks up a localized string similar to http://dev.tapit.com/~npenteado/adrequest.php.
         /// </summary>
         internal static string BaseUrl {
             get {
@@ -97,6 +97,15 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to wp-v1.0.0.
+        /// </summary>
+        internal static string SdkVersion {
+            get {
+                return ResourceManager.GetString("SdkVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mozilla/5.0 (compatible; MSIE 9.0; Windows Phone OS 7.5; Trident/5.0; IEMobile/9.0).
         /// </summary>
         internal static string UserAgent7_1 {
@@ -106,7 +115,7 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mozilla/5.0(compatible;MSIE 10.0;Windows phone 8.0;Trident/6.0;IEMobile/10.0;ARM;Touch).
+        ///   Looks up a localized string similar to Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 820).
         /// </summary>
         internal static string UserAgent8_0 {
             get {

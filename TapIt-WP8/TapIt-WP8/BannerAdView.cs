@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Phone.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,12 +18,13 @@ namespace TapIt_WP8
         #region Constants
 
        //Banner ad size
-        public const int _bannerHeight = 50, _bannerWidtht = 320;
+        public const int _bannerHeight = 80, _bannerWidtht = 320;
 
         #endregion
 
         #region DataMembers
 
+        //banner ad animation data members
         private int _animationTimeInterval = 20;
         private int _animationDuration = 3;
 
@@ -34,6 +36,17 @@ namespace TapIt_WP8
         #endregion
 
         #region Property
+
+        public override int Width
+        {
+            get { return base.Width; }
+            set 
+            {
+                // in case of Banner Ad the width should be equal to screen width
+                // ignore the "value"
+                base.Width = GetOrientationWidth();
+            }
+        }
 
         public int AnimationTimeInterval
         {
@@ -85,8 +98,9 @@ namespace TapIt_WP8
         /// </summary>
         protected override void SetAdSize(int height, int width)
         {
-            Height = height;
-            Width = width;
+            AdHeight = height;
+            AdWidth = width;
+            SetSizeToScreen();
         }
 
         /// <summary>
@@ -114,7 +128,16 @@ namespace TapIt_WP8
             _storyboard.Begin();
         }
 
+        /// <summary>
+        /// orientation change 
+        /// </summary>
+        public override async void DeviceOrientationChanged(PageOrientation pageOrientation)
+        {
+            base.DeviceOrientationChanged(pageOrientation);
+            SetSizeToScreen();
+            await Load();
+        }
+
         #endregion
-       
     }
 }
