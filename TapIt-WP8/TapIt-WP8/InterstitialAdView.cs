@@ -25,15 +25,6 @@ namespace TapIt_WP8
 
         private Button _closeBtn;
 
-        private int _animationTimeInterval = 10;
-        private int _animationDuration = 3;
-
-        private DispatcherTimer _animationTimer = new DispatcherTimer();
-        private Storyboard _storyboard = new Storyboard();
-        private DoubleAnimation _doubleAnimation = new DoubleAnimation();
-        private PlaneProjection _planeProjection = new PlaneProjection();
-
-
         #endregion
 
         #region Constructor
@@ -43,32 +34,23 @@ namespace TapIt_WP8
             SetAdType();
             SetAdSize(_intestitialAdHeight, _intestitialAdWidth);
             AddCloseButton();
-           // RotateinterstitialAd();
+            RotateinterstitialAd();
         }
 
         #endregion
 
         #region Property
 
-        public int AnimationTimeInterval
+        //Show th ad prompt
+        public override Visibility Visible
         {
-            get { return _animationTimeInterval; }
+            get { return _visible; }
             set
             {
-                // todo: need to validate value
-                _animationTimeInterval = value;
-                _animationTimer.Interval = new TimeSpan(0, 0, value);
-            }
-        }
+                Maingrid.Visibility = _visible = value;
 
-        public int AnimationDuration
-        {
-            get { return _animationDuration; }
-            set
-            {
-                // todo: need to validate value
-                _animationDuration = value;
-                _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(value));
+                if (Visibility.Visible == value)
+                    RotateinterstitialAd();
             }
         }
 
@@ -119,25 +101,20 @@ namespace TapIt_WP8
         /// </summary>
         private void RotateinterstitialAd()
         {
-            _animationTimer.Tick += dispatcherTimer_Tick;
-            _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
-
-            _doubleAnimation.From = -90;
+            Storyboard _storyBourd = new Storyboard();
+            DoubleAnimation _doubleAnimation = new DoubleAnimation();
+            _doubleAnimation.From = 90;
             _doubleAnimation.To = 0;
-            _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
-
-            WebBrowser.Projection = _planeProjection;
-            Storyboard.SetTarget(_doubleAnimation, WebBrowser.Projection);
-            Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationYProperty));
-            _storyboard.Children.Add(_doubleAnimation);
-
-            _animationTimer.Start();
-
+            PlaneProjection projection1 = new PlaneProjection();
+            Maingrid.Projection = projection1;
+            _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(1.25));
+            Storyboard.SetTarget(_doubleAnimation, Maingrid.Projection);
+            Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationXProperty));
+            _storyBourd.Children.Add(_doubleAnimation);
+            _storyBourd.Seek(TimeSpan.FromSeconds(0.5));
+            _storyBourd.Begin();
         }
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            _storyboard.Begin();
-        }
+
         private void AddCloseButton()
         {
             _closeBtn = new Button();
@@ -151,11 +128,10 @@ namespace TapIt_WP8
             Maingrid.Children.Add(_closeBtn);
         }
 
-        public override async void DeviceOrientationChanged(PageOrientation pageOrientation)
+        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
         {
             base.DeviceOrientationChanged(pageOrientation);
             SetSizeToScreen(true);
-            await Load();
         }
 
         #endregion

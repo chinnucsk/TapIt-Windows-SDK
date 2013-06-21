@@ -24,8 +24,8 @@ namespace TapIt_WP8
 
         private AdType _adtype = AdType.Unknown;
         private int _zoneId = -1;
-        private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        //private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
+        //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
+        private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
         private string _format = TapItResource.Format;
         private JsonDataContract _jsonResponse;
         private string _sdkversion = TapItResource.SdkVersion;
@@ -139,7 +139,7 @@ namespace TapIt_WP8
         private string GetAdSrvURL()
         {
             DeviceDataMgr deviceData = DeviceDataMgr.Instance;
-            deviceData.UpdateDeviceInfo();
+            deviceData.UpdateDeviceInfoWithLocation();
             // url creation using tapIt base url.
             string AdSrvURL = BaseURL + "?" +
                 "w=" + AdWidth +
@@ -149,11 +149,13 @@ namespace TapIt_WP8
                 "&udid=" + deviceData.DeviceID +
                 "&connection_speed=" + deviceData.ConnectionSpd +
                 "&carrier=" + deviceData.MobileOperator +
-                "&sdk=" +_sdkversion +
+                "&sdk=" + _sdkversion +
                 "&format=" + Format +
                 "&zone=" + ZoneId +
                 "&adtype=" + Convert.ToInt32(Adtype) +
-                "&o=" + deviceData.PageOrientationVal;
+                "&o=" + deviceData.PageOrientationVal +
+                "&lat=" + deviceData.Latitude +
+                "&long=" + deviceData.Longitude;
 
             // local server url. // temp code for testing purpose
             // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=15087&format=json";

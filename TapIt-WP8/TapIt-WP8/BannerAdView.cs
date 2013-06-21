@@ -131,11 +131,10 @@ namespace TapIt_WP8
         /// <summary>
         /// orientation change 
         /// </summary>
-        public override async void DeviceOrientationChanged(PageOrientation pageOrientation)
+        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
         {
             base.DeviceOrientationChanged(pageOrientation);
             SetSizeToScreen();
-            await Load();
         }
 
         #endregion

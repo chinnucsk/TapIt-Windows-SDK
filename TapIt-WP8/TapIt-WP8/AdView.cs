@@ -280,16 +280,23 @@ namespace TapIt_WP8
 
         public override async Task<bool> Load()
         {
-            bool retVal = await base.Load();
-
-            if (retVal)
+            bool retVal = false;
+            try
             {
-                retVal = JsonToHtml();
+                retVal = await base.Load();
 
                 if (retVal)
-                    NavigateToHtml();
-            }
+                {
+                    retVal = JsonToHtml();
 
+                    if (retVal)
+                        NavigateToHtml();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError("Error mesg in Load()" + ex);
+            }
             return retVal;
         }
 
@@ -353,7 +360,6 @@ namespace TapIt_WP8
         }
 
         #endregion
-
 
     }
 }
