@@ -1,13 +1,24 @@
 TapIt Windows Phone SDK
 =======================
-Version 0.1 - __This software is currently in development, don't expect it to work yet!__
+Version 0.9 Beta
 
 This is the WP8 SDK for the TapIt! mobile ad network. Go to http://tapit.com/ for more details and to sign up.
 
 Usage
 ---------
-The SDK can be downloaded from https://github.com/tapit/TapIt-Windows-SDK/tree/master/TapIt-WP8 . 
-Copy the /TapIt-WP8 folders into your Visual studio project. In your project, right click on the references folder and add reference of TapIt-WP8 to your project.
+To install, download and unzip the sdk archive(https://github.com/tapit/TapIt-Windows-SDK/raw/master/dist/TapIt-WP8-SDK.zip),
+then:
+
+1.  Copy the TapIt-WP8.dll file to your project folder. 
+2.	Right click on the references folder in the project.
+3.	Click the add reference option.
+4.	Browse for TapIt-WP8.dll and click ok.
+5.	To use the SDK please refer to README.md.
+6.	Project need to add following Device Capabilities in order to use WP8 SDK.
+    *	````ID_CAP_IDENTITY_DEVICE````
+    *	````ID_CAP_LOCATION````
+
+
 
 Banner Usage
 -------------------
@@ -73,7 +84,7 @@ _interstitialAdView.Visible = Visibility.Collapsed;
 For complete example, please refer 
 https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-WP8-TestApp/InterstitialAdPage.xaml.cs 
 
-Adprompt Usage
+AdPrompt Usage
 -----------------------
 AdPrompts are a simple ad unit designed to have a native feel.  The user is given the option to download an app, 
 and if they accept, they are taken to the marketplace.
@@ -84,12 +95,12 @@ and if they accept, they are taken to the marketplace.
 using TapIt_WP8; // Adding namespace
 
 // Data member
-AlertAdView _tapItAdView;
+AdPromptView _tapItAdView;
 
-// initialize Alert ad and add to your page (constructor)
-_tapItAdView = new AlertAdView();
+// initialize AdPrompt and add to your page (constructor)
+_tapItAdView = new AdPromptView();
 
-// set the alert ad parameters 
+// set the AdPrompt parameters 
 _tapItAdView.ZoneId = 1234; // Insert your zone id here
 
 // load the ad
@@ -102,7 +113,7 @@ _tapItAdView.Visible = Visibility.Visible;
 _tapItAdView.Visible = Visibility.Collapsed;
 ````
 For complete example, please refer 
-https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-WP8-TestApp/AlertAdPage.xaml.cs 
+https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-WP8-TestApp/AdPromptPage.xaml.cs 
 
 Callbacks
 -------------
