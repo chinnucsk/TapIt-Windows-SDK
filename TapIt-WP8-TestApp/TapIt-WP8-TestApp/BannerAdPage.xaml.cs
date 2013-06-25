@@ -29,18 +29,18 @@ namespace TapIt_WP8_TestApp
 
             // Set the event handler for when the application deactivated
             (Application.Current as TapIt_WP8_TestApp.App).App_Deactivated +=
-                          new EventHandler(MainPage_AppDeactivated);
+                          new EventHandler(BannerAdPage_AppDeactivated);
 
             // Set the event handler for when the application activated
             (Application.Current as TapIt_WP8_TestApp.App).App_Activated +=
-                          new EventHandler(MainPage_AppActivated);
+                          new EventHandler(BannerAdPage_AppActivated);
 
             //Initialize the view
             _bannerAdView = new BannerAdView();
 
             _bannerAdView.Visible = Visibility.Collapsed;
-            //_bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-            _bannerAdView.ZoneId = 15087;                  //zone id for local server
+            _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
+            //_bannerAdView.ZoneId = 15087;                  //zone id for local server
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
@@ -81,7 +81,7 @@ namespace TapIt_WP8_TestApp
         ///<summary>
         ///This event is fired when the app came to foreground
         ///</summary>
-        private void MainPage_AppActivated(object sender, EventArgs e)
+        private void BannerAdPage_AppActivated(object sender, EventArgs e)
         {
             _bannerAdView.AppActivated();
         }
@@ -89,7 +89,7 @@ namespace TapIt_WP8_TestApp
         ///<summary>
         ///This event is fired just before the app will be sent to the background.
         ///</summary>
-        void MainPage_AppDeactivated(object sender, EventArgs e)
+        void BannerAdPage_AppDeactivated(object sender, EventArgs e)
         {
             _bannerAdView.AppDeactivated();
         }
@@ -125,7 +125,6 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         private void _bannerAdView_controlLoaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("_bannerAdView_controlLoaded");
         }
 
         ///<summary>
@@ -134,6 +133,7 @@ namespace TapIt_WP8_TestApp
         void _bannerAdView_errorEvent(string strErrorMsg)
         {
             Debug.WriteLine("_bannerAdView_ErrorEvent :" + strErrorMsg);
+            progressring.Visibility = Visibility.Collapsed;
             MessageBox.Show(strErrorMsg);
         }
 
@@ -142,8 +142,8 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         void _bannerAdView_contentLoaded(object sender, NavigationEventArgs e)
         {
-            _bannerAdView.Visible = Visibility.Collapsed;
             MessageBox.Show("_bannerAdView_LoadCompleted");
+            progressring.Visibility = Visibility.Collapsed;
         }
 
         private void hideBtn_Click(object sender, RoutedEventArgs e)
@@ -153,10 +153,10 @@ namespace TapIt_WP8_TestApp
 
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
-            Task<bool> display = _bannerAdView.Load();
-            progressring.Visibility = Visibility.Collapsed;
+            progressring.Visibility = Visibility.Visible;
             _bannerAdView.AnimationTimeInterval = 10;
             _bannerAdView.AnimationDuration = 4;
+            _bannerAdView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)
@@ -164,6 +164,19 @@ namespace TapIt_WP8_TestApp
             loadBannerAd();
         }
 
+        private void PhoneApplicationPage_Unloaded_1(object sender, RoutedEventArgs e)
+        {
+            // remove the event handler for when the application deactivated
+            (Application.Current as TapIt_WP8_TestApp.App).App_Deactivated -=
+                          new EventHandler(BannerAdPage_AppDeactivated);
+
+            // remove the event handler for when the application activated
+            (Application.Current as TapIt_WP8_TestApp.App).App_Activated -=
+                          new EventHandler(BannerAdPage_AppActivated);
+        }
+
         #endregion
+
+       
     }
 }

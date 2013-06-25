@@ -42,7 +42,7 @@ namespace TapIt_WP8_TestApp
             this.NavigationService.Navigate(new Uri("/InterstitialAdPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
-        private void AlertAd_Click(object sender, EventArgs e)
+        private void AdPrompt_Click(object sender, EventArgs e)
         {
             this.NavigationService.Navigate(new Uri("/AdPromptPage.xaml", UriKind.RelativeOrAbsolute));
         }

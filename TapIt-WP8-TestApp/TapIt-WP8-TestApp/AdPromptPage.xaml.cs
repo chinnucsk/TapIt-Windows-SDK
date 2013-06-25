@@ -9,10 +9,12 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using TapIt_WP8;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.ComponentModel;
 
 namespace TapIt_WP8_TestApp
 {
-    public partial class AlertAdPage : PhoneApplicationPage
+    public partial class AdPromptPage : PhoneApplicationPage
     {
         #region DataMember
 
@@ -22,7 +24,7 @@ namespace TapIt_WP8_TestApp
 
         #region Constructor
 
-        public AlertAdPage()
+        public AdPromptPage()
         {
             InitializeComponent();
 
@@ -30,8 +32,9 @@ namespace TapIt_WP8_TestApp
             _AdPromptView = new AdPromptView();
 
             _AdPromptView.Visible = Visibility.Collapsed;
-            _AdPromptView.ZoneId = 15501; //zone id for local server
-           // _AdPromptView.ZoneId = 25254;//zone id for TapIt server
+            //_AdPromptView.ZoneId = 15501; //zone id for local server
+            _AdPromptView.ZoneId = 25254;//zone id for TapIt server
+
             LayoutRoot.Children.Add(_AdPromptView.ViewControl);
 
             //attached events
@@ -43,7 +46,7 @@ namespace TapIt_WP8_TestApp
         #endregion
 
         #region Events
-        
+
         //orientation change event
         private void DeviceOrientationChanged(object sender, OrientationChangedEventArgs e)
         {
@@ -55,7 +58,8 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         private void _AdPromptView_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            MessageBox.Show(" _alertAdView.ContentLoaded");
+            MessageBox.Show("AdPrompt Load Completed");
+            progressring.Visibility = Visibility.Collapsed;
         }
 
         ///<summary>
@@ -63,7 +67,6 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         private void _AdPromptView_loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("_alertAdView.ControlLoaded");
         }
 
         ///<summary>
@@ -71,19 +74,19 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         void _AdPromptView_ErrorEvent(string strErrorMsg)
         {
+            progressring.Visibility = Visibility.Collapsed;
             MessageBox.Show(strErrorMsg);
         }
 
-        private void PhoneApplicationPage_BackKeyPress_1(object sender, System.ComponentModel.CancelEventArgs e)
+        private void PhoneApplicationPage_BackKeyPress_1(object sender, CancelEventArgs e)
         {
-            _AdPromptView.OnBackKeypressed(e.Cancel);
+            _AdPromptView.OnBackKeypressed(e);
         }
 
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             progressring.Visibility = Visibility.Visible;
-            Task<bool> display = _AdPromptView.Load();
-            progressring.Visibility = Visibility.Collapsed;
+            _AdPromptView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)

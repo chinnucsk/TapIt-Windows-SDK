@@ -82,7 +82,7 @@
         <shell:ApplicationBar Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
             <shell:ApplicationBarIconButton x:Name="BannerAd" IconUri="/Assets/AppBar/favs.png" Text="Banner" Click="BannerAd_Click" />
             <shell:ApplicationBarIconButton x:Name="InterstitialAd" IconUri="/Assets/AppBar/favs.png" Text="Interstitial" Click="InterstitialAd_Click"  />
-            <shell:ApplicationBarIconButton x:Name="AdPrompt"  IconUri="/Assets/AppBar/favs.png" Text="AdPrompt" Click="AlertAd_Click" />
+            <shell:ApplicationBarIconButton x:Name="AdPrompt"  IconUri="/Assets/AppBar/favs.png" Text="AdPrompt" Click="AdPrompt_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 
