@@ -13,8 +13,7 @@ then:
 2.	Right click on the references folder in the project.
 3.	Click the add reference option.
 4.	Browse for TapIt-WP8.dll and click ok.
-5.	To use the SDK please refer to README.md.
-6.	Project need to add following Device Capabilities in order to use WP8 SDK.
+5.	Project need to add following Device Capabilities in order to use WP8 SDK.
     *	````ID_CAP_IDENTITY_DEVICE````
     *	````ID_CAP_LOCATION````
 
