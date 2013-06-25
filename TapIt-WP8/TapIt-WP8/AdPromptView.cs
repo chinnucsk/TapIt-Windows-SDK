@@ -1,7 +1,9 @@
 ﻿using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,11 @@ namespace TapIt_WP8
         #region Datamember
 
         private Popup _adPrompt;
+
+        private Grid _popUpGrid;
+        private int _width = 0;
+        private int _height = 0;
+
         private Border _border;
         private StackPanel _mainPanel;
         private StackPanel _stackPanel;
@@ -45,79 +52,131 @@ namespace TapIt_WP8
         public double TitleFont
         {
             get { return _titleFont; }
-            set { _titleFont = value; }
+            set
+            {
+                _titleFont = value;
+                _titleBlock.FontSize = value;
+            }
         }
 
         public Color TitleForeground
         {
             get { return _titleForeground; }
-            set { _titleForeground = value; }
+            set
+            {
+                _titleForeground = value;
+                _titleBlock.Foreground = new SolidColorBrush(value);
+            }
         }
 
         public Thickness TitleMargin
         {
             get { return _titleMargin; }
-            set { _titleMargin = value; }
+            set
+            {
+                _titleMargin = value;
+                _titleBlock.Margin = value;
+            }
         }
 
         public Thickness OkBtnMargin
         {
             get { return _okBtnMargin; }
-            set { _okBtnMargin = value; }
+            set
+            {
+                _okBtnMargin = value;
+                _okBtn.Margin = value;
+            }
         }
 
         public Thickness CloseBtnMargin
         {
             get { return _closeBtnMargin; }
-            set { _closeBtnMargin = value; }
+            set
+            {
+                _closeBtnMargin = value;
+                _closeBtn.Margin = value;
+            }
         }
 
         public Thickness BorderMargin
         {
             get { return _borderMargin; }
-            set { _borderMargin = value; }
+            set
+            {
+                _borderMargin = value;
+                _border.BorderThickness = value;
+            }
         }
 
         public Color OkBtnBackground
         {
             get { return _okBtnBackground; }
-            set { _okBtnBackground = value; }
+            set
+            {
+                _okBtnBackground = value;
+                _okBtn.Background = new SolidColorBrush(value);
+            }
         }
 
         public Color CloseBtnBackground
         {
             get { return _closeBtnBackground; }
-            set { _closeBtnBackground = value; }
+            set
+            {
+                _closeBtnBackground = value;
+                _closeBtn.Background = new SolidColorBrush(value);
+            }
         }
 
         public Color OkBtnColor
         {
             get { return _okBtnColor; }
-            set { _okBtnColor = value; }
+            set
+            {
+                _okBtnColor = value;
+                _okBtn.BorderBrush = new SolidColorBrush(value);
+            }
         }
 
         public Color CloseBtnColor
         {
             get { return _closeBtnColor; }
-            set { _closeBtnColor = value; }
+            set
+            {
+                _closeBtnColor = value;
+                _closeBtn.BorderBrush = new SolidColorBrush(value);
+            }
         }
 
         public Color StackPanelColor
         {
             get { return _stackPanelColor; }
-            set { _stackPanelColor = value; }
+            set
+            {
+                _stackPanelColor = value;
+                _stackPanel.Background = new SolidColorBrush(value);
+            }
         }
 
         public Color MainPanelColorBackground
         {
             get { return _mainPanelBackground; }
-            set { _mainPanelBackground = value; }
+            set
+            {
+                _mainPanelBackground = value;
+                _mainPanel.Background = new SolidColorBrush(value);
+            }
         }
 
         public Color BorderColor
         {
             get { return _borderColor; }
-            set { _borderColor = value; }
+            set
+            {
+                _borderColor = value;
+                _border.BorderBrush = new SolidColorBrush(value);
+            }
         }
 
         //Show the AdPrompt
@@ -126,10 +185,29 @@ namespace TapIt_WP8
             get { return _visible; }
             set
             {
-                _visible = value;
+                if (value == Visibility.Visible)
+                {
+                    if (IsAdDisplayed)
+                    {
+                        OnError(TapItResource.LoadNewAd);
+                        return;
+                    }
 
-                if (Visibility.Visible == value)
-                    ShowAdPrompt();
+                    if (!IsAdLoaded)
+                    {
+                        IsInternalLoad = true;
+                        Load();
+                    }
+                    else
+                    {
+                        _visible = value;
+                        ShowAdPrompt();
+                    }
+                }
+                else
+                {
+                    _visible = value;
+                }
             }
         }
 
@@ -148,15 +226,9 @@ namespace TapIt_WP8
             // Create PopUp control
             CreatePopUpControl();
 
-            // Set the AdPromt position.
-            SetAdPromptPosition(CalculateYPos(), CalculateXPos());
-
             SetAdType();
 
             SetAdSize(0, 0);
-
-            // Consider Orientation
-            SetAdPromptPosition();
         }
 
         #endregion
@@ -177,7 +249,7 @@ namespace TapIt_WP8
 
         protected override void SetAdSize(int height, int width)
         {
-            // NO code here as AdPrompt size is adjusted as per the content.
+            // No code here as AdPrompt size is adjusted as per the content.
         }
 
         #endregion
@@ -185,20 +257,18 @@ namespace TapIt_WP8
         #region Methods
 
         // PopUp X Pos
-        private int CalculateXPos()
+        private int CalculateXPos(int deviceWidth)
         {
-            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
             int x = 0;
-            x = (deviceData.ScreenWidth) / 4;
+            x = (deviceWidth - _width) / 2;
             return x;
         }
 
         // PopUp Y Pos
-        private int CalculateYPos()
+        private int CalculateYPos(int deviceHeight)
         {
-            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
             int y = 0;
-            y = (deviceData.ScreenHeight) / 3;
+            y = (deviceHeight - _height) / 2;
             return y;
         }
 
@@ -232,16 +302,20 @@ namespace TapIt_WP8
 
             _okBtn = new Button();
             _okBtn.BorderBrush = new SolidColorBrush(OkBtnColor);
-            // _callTocationBtn.Content = "ok"; // temp code
+            //_okBtn.Content = "ok"; // temp code
 
             _okBtn.Background = new SolidColorBrush(OkBtnBackground);
             _okBtn.Margin = OkBtnMargin;
-            _okBtn.Click += _callTocationBtn_Click;
+            _okBtn.Click += _okBtn_Click;
 
             _titleBlock = new TextBlock();
             // _titleBlk.Text = "this is test app"; // temp code
 
+            DeviceDataMgr deviceData = DeviceDataMgr.Instance;
+
             _titleBlock.Margin = TitleMargin;
+            _titleBlock.TextWrapping = TextWrapping.Wrap;
+            _titleBlock.MaxWidth = (int)deviceData.ScreenWidth * 0.8;
             _titleBlock.FontSize = TitleFont;
             _titleBlock.Foreground = new SolidColorBrush(TitleForeground);
             _titleBlock.HorizontalAlignment = HorizontalAlignment.Center;
@@ -252,7 +326,11 @@ namespace TapIt_WP8
             _mainPanel.Children.Add(_stackPanel);
             _border.Child = _mainPanel;
 
-            _adPrompt.Child = _border;
+            _popUpGrid = new Grid();
+            _popUpGrid.SizeChanged += _popUpGrid_SizeChanged;
+            _popUpGrid.Children.Add(_border);
+
+            _adPrompt.Child = _popUpGrid;
         }
 
         private void ShowAdPrompt()
@@ -267,13 +345,12 @@ namespace TapIt_WP8
 
                 // Open the popup.
                 _adPrompt.IsOpen = true;
+                IsAdDisplayed = true;
             }
             else
             {
                 OnError(TapItResource.AdPromptData);
             }
-
-            _adPrompt.IsOpen = true; // temp code - to be removed.
         }
 
         public override async Task<bool> Load()
@@ -303,24 +380,43 @@ namespace TapIt_WP8
             if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
                    PageOrientation.LandscapeLeft == deviceData.PageOrientation)
             {
-                SetAdPromptPosition(CalculateXPos(), CalculateYPos());
+                SetAdPromptPosition(CalculateYPos(deviceData.ScreenWidth), CalculateXPos(deviceData.ScreenHeight));
             }
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                PageOrientation.PortraitUp == deviceData.PageOrientation)
             {
-                SetAdPromptPosition(CalculateYPos(), CalculateXPos());
+                SetAdPromptPosition(CalculateYPos(deviceData.ScreenHeight), CalculateXPos(deviceData.ScreenWidth));
             }
         }
 
-        public void OnBackKeypressed(bool cancle)
+        public void OnBackKeypressed(CancelEventArgs e)
         {
-            if (false == cancle)
+            // Check if the PopUp window is open
+            if (_adPrompt.IsOpen)
+            {
+                // Close the PopUp Window
                 _adPrompt.IsOpen = false;
+                e.Cancel = true;
+            }
+            else
+            {
+                // Popup is already closed 
+                // navigating back from the current page
+            }
         }
 
         #endregion
 
         #region Events
+
+        void _popUpGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            _width = (int)_popUpGrid.ActualWidth;
+            _height = (int)_popUpGrid.ActualHeight;
+
+            // Set the AdPromt position.
+            SetAdPromptPosition();
+        }
 
         void _adprompt_ControlLoaded(object sender, RoutedEventArgs e)
         {
@@ -330,8 +426,9 @@ namespace TapIt_WP8
         }
 
         // AdPrompt button click events
-        void _callTocationBtn_Click(object sender, RoutedEventArgs e)
+        void _okBtn_Click(object sender, RoutedEventArgs e)
         {
+            _adPrompt.IsOpen = false;
             WebBrowserTask browserTask = new WebBrowserTask();
             browserTask.Uri = new Uri(JsonResponse.clickUrl);
             browserTask.Show();
@@ -344,6 +441,5 @@ namespace TapIt_WP8
         }
 
         #endregion
-
     }
 }

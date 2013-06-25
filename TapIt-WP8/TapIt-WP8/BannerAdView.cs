@@ -37,6 +37,8 @@ namespace TapIt_WP8
 
         #region Property
 
+
+
         public override int Width
         {
             get { return base.Width; }

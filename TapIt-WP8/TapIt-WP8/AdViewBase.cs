@@ -24,11 +24,15 @@ namespace TapIt_WP8
 
         private AdType _adtype = AdType.Unknown;
         private int _zoneId = -1;
-        //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
+        private string _baseURL = TapItResource.BaseUrl; //TapIt server url
+        // private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
         private string _format = TapItResource.Format;
         private JsonDataContract _jsonResponse;
         private string _sdkversion = TapItResource.SdkVersion;
+
+        private bool _isAdLoaded = false;
+        private bool _isInternalLoad = false;
+        private bool _isAdDisplayed = false;
 
         #endregion
 
@@ -66,6 +70,24 @@ namespace TapIt_WP8
         #endregion
 
         #region Property
+
+        public bool IsAdDisplayed
+        {
+            get { return _isAdDisplayed; }
+            set { _isAdDisplayed = value; }
+        }
+
+        public bool IsInternalLoad
+        {
+            get { return _isInternalLoad; }
+            set { _isInternalLoad = value; }
+        }
+
+        public bool IsAdLoaded
+        {
+            get { return _isAdLoaded; }
+            set { _isAdLoaded = value; }
+        }
 
         public abstract Visibility Visible
         {
@@ -187,7 +209,7 @@ namespace TapIt_WP8
                 Debug.WriteLine("Exception in Load() :" + ex.Message);
                 OnError("Exception in Load()", ex);
             }
-            
+
             return isLoaded;
         }
 
@@ -207,6 +229,7 @@ namespace TapIt_WP8
 
                 if (ex != null)
                     str += " Exception occured :" + ex.Message;
+
                 handler(str);
             }
         }
@@ -225,11 +248,21 @@ namespace TapIt_WP8
         protected virtual void OnContentLoad(object sender, NavigationEventArgs e)
         {
             Debug.WriteLine("OnContentLoad");
+            IsAdLoaded = true;
+            IsAdDisplayed = false;
 
-            LoadCompletedEventHandler handler = ContentLoaded;
-            if (handler != null)
+            if (!IsInternalLoad)
             {
-                handler(sender, e);
+                LoadCompletedEventHandler handler = ContentLoaded;
+                if (handler != null)
+                {
+                    handler(sender, e);
+                }
+            }
+            else
+            {
+                IsInternalLoad = false;
+                Visible = Visibility.Visible;
             }
         }
 

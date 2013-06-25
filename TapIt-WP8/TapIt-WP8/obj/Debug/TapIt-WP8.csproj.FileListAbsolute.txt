@@ -1,6 +1,0 @@
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\Bin\Debug\TapIt-WP8.dll
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\Bin\Debug\TapIt-WP8.pdb
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\obj\Debug\TapIt_WP8.TapItResource.resources
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\obj\Debug\TapIt-WP8.csproj.GenerateResource.Cache
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\obj\Debug\TapIt-WP8.dll
-D:\TapIt-Project\tapit-SVN\trunk\TapIt-WP8\TapIt-WP8\obj\Debug\TapIt-WP8.pdb

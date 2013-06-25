@@ -1,4 +1,5 @@
 ﻿using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace TapIt_WP8
         #region Data member
 
         private Button _closeBtn;
+        private bool _isSystemTray = false;
 
         #endregion
 
@@ -41,16 +43,22 @@ namespace TapIt_WP8
 
         #region Property
 
-        //Show th ad prompt
         public override Visibility Visible
         {
-            get { return _visible; }
+            get { return base.Visible; }
             set
             {
-                Maingrid.Visibility = _visible = value;
-
+                base.Visible = value;
                 if (Visibility.Visible == value)
+                {
                     RotateinterstitialAd();
+                    //_isSystemTray = SystemTray.IsVisible;
+                    //SystemTray.IsVisible = false;
+                }
+                else
+                {
+                    //SystemTray.IsVisible = _isSystemTray;
+                }
             }
         }
 
@@ -140,7 +148,7 @@ namespace TapIt_WP8
 
         void _closeBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Maingrid.Visibility = Visibility.Collapsed;
+            Visible = Visibility.Collapsed;
         }
 
         #endregion

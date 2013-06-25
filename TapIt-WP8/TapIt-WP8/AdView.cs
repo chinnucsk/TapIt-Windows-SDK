@@ -32,7 +32,7 @@ namespace TapIt_WP8
         private WebBrowser _webBrowser;
 
         private Thickness _margin;
-        
+
         private string _htmlResponse = string.Empty; // get the string in html format
 
         #endregion
@@ -57,10 +57,29 @@ namespace TapIt_WP8
             get { return _visible; }
             set
             {
-                _maingrid.Visibility = _visible = value;
+                if (value == Visibility.Visible)
+                {
+                    if (!IsAdLoaded)
+                    {
+                        IsInternalLoad = true;
+                        Load();
+                    }
+                    else
+                    {
+                        _maingrid.Visibility = _visible = value;
+                    }
+                }
+                else
+                {
+                    _maingrid.Visibility = _visible = value;
+                }
             }
         }
 
+        private async Task<bool> LoadAsyncData()
+        {
+            return await Load();
+        }
         // return control to add in UI tree
         public FrameworkElement ViewControl
         {
@@ -75,7 +94,7 @@ namespace TapIt_WP8
         public override int Width
         {
             get { return base.Width; }
-            set 
+            set
             {
                 base.Width = value;
                 SetViewWidth(value);
@@ -88,7 +107,7 @@ namespace TapIt_WP8
             set
             {
                 base.Height = value;
-                SetViewHeight(value); 
+                SetViewHeight(value);
             }
         }
 
@@ -128,7 +147,7 @@ namespace TapIt_WP8
 
             ////Maingrid.Visibility = Visibility.Visible;
             ////WebBrowser.Navigate(new Uri("http://172.27.47.147/test", UriKind.Absolute));
-            
+
 
             //////////////////
 
@@ -204,7 +223,7 @@ namespace TapIt_WP8
         /// </summary>
         void _webBrowser_Navigating(object sender, NavigatingEventArgs e)
         {
-           //// return; // temp - remove
+            //// return; // temp - remove
             Debug.WriteLine("_webBrowser_Navigating");
 
             if (Navigating != null)
@@ -241,7 +260,7 @@ namespace TapIt_WP8
                    PageOrientation.LandscapeLeft == deviceData.PageOrientation)
             {
                 width = deviceData.ScreenHeight;
-            }   
+            }
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                 PageOrientation.PortraitUp == deviceData.PageOrientation)
             {
@@ -273,7 +292,7 @@ namespace TapIt_WP8
         protected void SetSizeToScreen(bool isHeight = false)
         {
             SetViewWidth(GetOrientationWidth());
-            
+
             if (isHeight)
                 SetViewHeight(GetOrientationHeight());
         }

@@ -132,6 +132,9 @@
   <data name="Format" xml:space="preserve">
     <value>json</value>
   </data>
+  <data name="LoadNewAd" xml:space="preserve">
+    <value>Please Load New Ad</value>
+  </data>
   <data name="SdkVersion" xml:space="preserve">
     <value>wp-v1.0.0</value>
   </data>
