@@ -33,6 +33,7 @@ namespace TapIt_WP8
         private bool _isAdLoaded = false;
         private bool _isInternalLoad = false;
         private bool _isAdDisplayed = false;
+        private bool _isAppActived = false;
 
         #endregion
 
@@ -70,6 +71,12 @@ namespace TapIt_WP8
         #endregion
 
         #region Property
+
+        public bool IsAppActived
+        {
+            get { return _isAppActived; }
+            set { _isAppActived = value; }
+        }
 
         public bool IsAdDisplayed
         {
@@ -219,6 +226,7 @@ namespace TapIt_WP8
         ///</summary>
         protected void OnError(string strMsg, Exception ex = null)
         {
+            IsAppActived = false; 
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
@@ -253,10 +261,13 @@ namespace TapIt_WP8
 
             if (!IsInternalLoad)
             {
-                LoadCompletedEventHandler handler = ContentLoaded;
-                if (handler != null)
+                if (!IsAppActived)
                 {
-                    handler(sender, e);
+                    LoadCompletedEventHandler handler = ContentLoaded;
+                    if (handler != null)
+                    {
+                        handler(sender, e);
+                    }
                 }
             }
             else
@@ -264,6 +275,8 @@ namespace TapIt_WP8
                 IsInternalLoad = false;
                 Visible = Visibility.Visible;
             }
+
+            IsAppActived = false;
         }
 
         #endregion

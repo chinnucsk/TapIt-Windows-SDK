@@ -35,6 +35,8 @@ namespace TapIt_WP8
 
         private string _htmlResponse = string.Empty; // get the string in html format
 
+      
+ 
         #endregion
 
         #region EventsDecleration
@@ -354,6 +356,7 @@ namespace TapIt_WP8
         ///</summary>
         public void AppActivated()
         {
+            IsAppActived = true;
             if (PhoneApplicationService.Current.State["htmlResponse"] == null)
                 return;
 

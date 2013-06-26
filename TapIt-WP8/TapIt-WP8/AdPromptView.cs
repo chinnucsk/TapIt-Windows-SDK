@@ -21,6 +21,7 @@ namespace TapIt_WP8
 
         private Popup _adPrompt;
 
+        private Grid _maingrid;
         private Grid _popUpGrid;
         private int _width = 0;
         private int _height = 0;
@@ -207,6 +208,7 @@ namespace TapIt_WP8
                 else
                 {
                     _visible = value;
+                    _adPrompt.IsOpen = false;
                 }
             }
         }
@@ -240,12 +242,12 @@ namespace TapIt_WP8
             Adtype = AdType.Ad_Prompt;
         }
 
-        private void SetAdPromptPosition(int y, int x)
-        {
-            // Set the AdPromt position.
-            _adPrompt.VerticalOffset = y;
-            _adPrompt.HorizontalOffset = x;
-        }
+        //private void SetAdPromptPosition(int y, int x)
+        //{
+        //    // Set the AdPromt position.
+        //    //_adPrompt.VerticalOffset = y;
+        //    //_adPrompt.HorizontalOffset = x;
+        //}
 
         protected override void SetAdSize(int height, int width)
         {
@@ -256,21 +258,21 @@ namespace TapIt_WP8
 
         #region Methods
 
-        // PopUp X Pos
-        private int CalculateXPos(int deviceWidth)
-        {
-            int x = 0;
-            x = (deviceWidth - _width) / 2;
-            return x;
-        }
+        //// PopUp X Pos
+        //private int CalculateXPos(int deviceWidth)
+        //{
+        //    int x = 0;
+        //    x = (deviceWidth - _width) / 2;
+        //    return x;
+        //}
 
-        // PopUp Y Pos
-        private int CalculateYPos(int deviceHeight)
-        {
-            int y = 0;
-            y = (deviceHeight - _height) / 2;
-            return y;
-        }
+        //// PopUp Y Pos
+        //private int CalculateYPos(int deviceHeight)
+        //{
+        //    int y = 0;
+        //    y = (deviceHeight - _height) / 2;
+        //    return y;
+        //}
 
         private void CreatePopUpControl()
         {
@@ -328,9 +330,15 @@ namespace TapIt_WP8
 
             _popUpGrid = new Grid();
             _popUpGrid.SizeChanged += _popUpGrid_SizeChanged;
+            _popUpGrid.VerticalAlignment = VerticalAlignment.Center;
+            _popUpGrid.HorizontalAlignment = HorizontalAlignment.Center;
             _popUpGrid.Children.Add(_border);
 
-            _adPrompt.Child = _popUpGrid;
+            _maingrid = new Grid();
+            _maingrid.Background = new SolidColorBrush(Colors.Transparent);
+            _maingrid.Children.Add(_popUpGrid);
+
+            _adPrompt.Child = _maingrid;
         }
 
         private void ShowAdPrompt()
@@ -380,12 +388,17 @@ namespace TapIt_WP8
             if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
                    PageOrientation.LandscapeLeft == deviceData.PageOrientation)
             {
-                SetAdPromptPosition(CalculateYPos(deviceData.ScreenWidth), CalculateXPos(deviceData.ScreenHeight));
+                //SetAdPromptPosition(CalculateYPos(deviceData.ScreenWidth), CalculateXPos(deviceData.ScreenHeight));
+
+                _maingrid.Width = deviceData.ScreenHeight;
+                _maingrid.Height = deviceData.ScreenWidth;
             }
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                PageOrientation.PortraitUp == deviceData.PageOrientation)
             {
-                SetAdPromptPosition(CalculateYPos(deviceData.ScreenHeight), CalculateXPos(deviceData.ScreenWidth));
+                //SetAdPromptPosition(CalculateYPos(deviceData.ScreenHeight), CalculateXPos(deviceData.ScreenWidth));
+                _maingrid.Width = deviceData.ScreenWidth;
+                _maingrid.Height = deviceData.ScreenHeight;
             }
         }
 
@@ -416,6 +429,8 @@ namespace TapIt_WP8
 
             // Set the AdPromt position.
             SetAdPromptPosition();
+            //_maingrid.Height = 800;
+            //_maingrid.Width = 480;
         }
 
         void _adprompt_ControlLoaded(object sender, RoutedEventArgs e)
