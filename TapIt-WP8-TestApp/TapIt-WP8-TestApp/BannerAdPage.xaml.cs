@@ -38,6 +38,8 @@ namespace TapIt_WP8_TestApp
             //Initialize the view
             _bannerAdView = new BannerAdView();
 
+         
+
             _bannerAdView.Visible = Visibility.Collapsed;
             _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
             //_bannerAdView.ZoneId = 15087;                  //zone id for local server
@@ -125,6 +127,7 @@ namespace TapIt_WP8_TestApp
         ///</summary>
         private void _bannerAdView_controlLoaded(object sender, RoutedEventArgs e)
         {
+
         }
 
         ///<summary>

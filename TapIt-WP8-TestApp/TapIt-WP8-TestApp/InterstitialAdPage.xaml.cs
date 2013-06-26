@@ -124,7 +124,7 @@ namespace TapIt_WP8_TestApp
             progressring.Visibility = Visibility.Collapsed;
         }
 
-        private async void loadBtn_Click(object sender, RoutedEventArgs e)
+        private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             progressring.Visibility = Visibility.Visible;
             _interstitialAdView.Load();
