@@ -121,10 +121,10 @@
     <value>No Data Available for AdPrompt</value>
   </data>
   <data name="BaseUrl" xml:space="preserve">
-    <value>http://dev.tapit.com/~npenteado/adrequest.php</value>
+    <value>http://r.tapit.com/adrequest.php</value>
   </data>
   <data name="BaseUrl_Local" xml:space="preserve">
-    <value>http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php</value>
+    <value>http://r.tapit.com/adrequest.php</value>
   </data>
   <data name="BrowserName" xml:space="preserve">
     <value>TapItAdViewControl</value>

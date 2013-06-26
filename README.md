@@ -1,6 +1,6 @@
 TapIt Windows Phone SDK
 =======================
-Version 0.9 Beta
+Version 1.0.0
 
 This is the WP8 SDK for the TapIt! mobile ad network. Go to http://tapit.com/ for more details and to sign up.
 
