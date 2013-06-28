@@ -158,6 +158,16 @@ https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-W
 State management
 -------------------
 
+The Windows Phone execution model allows only one app to run in the foreground at a time.
+when the user switches away from an app, it is either suspended or terminated,
+depending on the context and the way that the user navigated away.
+The Windows Phone application model provides a set of events and related APIs that allow your 
+app to handle activation and deactivation in a way that provides a consistent and intuitive user experience.
+
+In the SDK the AdView contents are lost when the application gets deactivated.so on App activation
+The contents need to be restored.
+
+
 // handle the App activation / deactivation
 
 //for banner ad
