@@ -390,7 +390,7 @@ namespace TapIt_WP8
             {
                 //SetAdPromptPosition(CalculateYPos(deviceData.ScreenWidth), CalculateXPos(deviceData.ScreenHeight));
 
-                _maingrid.Width = deviceData.ScreenHeight;
+                _maingrid.Width = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayWidthLandscape : 0);
                 _maingrid.Height = deviceData.ScreenWidth;
             }
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
@@ -398,7 +398,7 @@ namespace TapIt_WP8
             {
                 //SetAdPromptPosition(CalculateYPos(deviceData.ScreenHeight), CalculateXPos(deviceData.ScreenWidth));
                 _maingrid.Width = deviceData.ScreenWidth;
-                _maingrid.Height = deviceData.ScreenHeight;
+                _maingrid.Height = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayHeightPortrait : 0);
             }
         }
 

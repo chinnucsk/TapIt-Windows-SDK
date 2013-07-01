@@ -97,7 +97,9 @@ namespace TapIt_WP8
             String alignment;
             if (Convert.ToInt32(helper.adWidth) > 0)
             {
-                alignment = "style=\"width:" + helper.adWidth + "px; margin:0 auto; text-align:center;\"";
+                alignment = "style=\"width:" + helper.adWidth + 
+                    // "px; height:" + helper.adHeight + 
+                    "px; margin:0 auto; text-align:center;\"";
             }
             else
             {
@@ -105,7 +107,7 @@ namespace TapIt_WP8
             }
 
             string strHTML = "<html><head>"
-                + "<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />"
+                + "<meta name='viewport' content=' initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />"
                 + "<title>Advertisement</title> "
                 //            + "<script src=\"file:/" + bridgeScriptPath + "\" type=\"text/javascript\"></script>"
                 //            + "<script src=\"file:/" + scriptPath + "\" type=\"text/javascript\"></script>"

@@ -15,6 +15,9 @@ namespace TapIt_WP8
     {
         #region DataMember
 
+        private const int _systemTrayHeightPortrait = 32;
+        private const int _systemTrayWidthLandscape = 72;
+
         private int _width;
         private int _height;
         private int _adHeight;
@@ -25,7 +28,7 @@ namespace TapIt_WP8
         private AdType _adtype = AdType.Unknown;
         private int _zoneId = -1;
         private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        // private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
+        //private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
         private string _format = TapItResource.Format;
         private JsonDataContract _jsonResponse;
         private string _sdkversion = TapItResource.SdkVersion;
@@ -71,6 +74,16 @@ namespace TapIt_WP8
         #endregion
 
         #region Property
+
+        public int SystemTrayWidthLandscape
+        {
+            get { return _systemTrayWidthLandscape; }
+        }
+
+        public int SystemTrayHeightPortrait
+        {
+            get { return _systemTrayHeightPortrait; }
+        }
 
         public bool IsAppActived
         {

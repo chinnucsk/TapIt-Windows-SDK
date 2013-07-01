@@ -128,7 +128,7 @@ namespace TapIt_WP8
             //initailization of grid
             _maingrid = new Grid();
             _maingrid.Name = TapItResource.BrowserName;
-            Maingrid.Background = new SolidColorBrush(Colors.Blue);
+            //Maingrid.Background = new SolidColorBrush(Colors.Blue);
 
             //nitailization of browser control
             _webBrowser = new WebBrowser();
@@ -261,7 +261,7 @@ namespace TapIt_WP8
             if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
                    PageOrientation.LandscapeLeft == deviceData.PageOrientation)
             {
-                width = deviceData.ScreenHeight;
+                width = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayWidthLandscape : 0);
             }
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                 PageOrientation.PortraitUp == deviceData.PageOrientation)
@@ -285,7 +285,7 @@ namespace TapIt_WP8
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                 PageOrientation.PortraitUp == deviceData.PageOrientation)
             {
-                height = deviceData.ScreenHeight;
+                height = deviceData.ScreenHeight - (SystemTray.IsVisible? SystemTrayHeightPortrait: 0) - 1;
             }
 
             return height;
