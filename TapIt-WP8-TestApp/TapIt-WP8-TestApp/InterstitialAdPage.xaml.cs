@@ -51,6 +51,8 @@ namespace TapIt_WP8_TestApp
             _interstitialAdView.Navigating += interstitialAdView_navigating;
             _interstitialAdView.Navigated += interstitialAdView_navigated;
             _interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+
+            //string nameSpace = this.GetType().Namespace;
         }
 
         #endregion
@@ -169,6 +171,5 @@ namespace TapIt_WP8_TestApp
         }
 
         #endregion
-
     }
 }
