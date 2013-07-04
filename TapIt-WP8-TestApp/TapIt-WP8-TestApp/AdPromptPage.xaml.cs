@@ -35,7 +35,7 @@ namespace TapIt_WP8_TestApp
             //_AdPromptView.ZoneId = 15501; //zone id for local server
             _AdPromptView.ZoneId = 25254;//zone id for TapIt server
 
-            LayoutRoot.Children.Add(_AdPromptView.ViewControl);
+           // LayoutRoot.Children.Add(_AdPromptView.ViewControl);
 
             //attached events
             _AdPromptView.ControlLoaded += _AdPromptView_loaded;
@@ -80,7 +80,7 @@ namespace TapIt_WP8_TestApp
 
         private void PhoneApplicationPage_BackKeyPress_1(object sender, CancelEventArgs e)
         {
-            _AdPromptView.OnBackKeypressed(e);
+            
         }
 
         private void loadBtn_Click(object sender, RoutedEventArgs e)

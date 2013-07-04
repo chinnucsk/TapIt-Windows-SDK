@@ -38,8 +38,6 @@ namespace TapIt_WP8_TestApp
             //Initialize the view
             _bannerAdView = new BannerAdView();
 
-         
-
             _bannerAdView.Visible = Visibility.Collapsed;
             _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
             //_bannerAdView.ZoneId = 15087;                  //zone id for local server
@@ -157,8 +155,8 @@ namespace TapIt_WP8_TestApp
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             progressring.Visibility = Visibility.Visible;
-            _bannerAdView.AnimationTimeInterval = 10;
-            _bannerAdView.AnimationDuration = 4;
+            //_bannerAdView.AnimationTimeInterval = 10;
+            //_bannerAdView.AnimationDuration = 4;
             _bannerAdView.Load();
         }
 
@@ -180,6 +178,6 @@ namespace TapIt_WP8_TestApp
 
         #endregion
 
-       
+
     }
 }
