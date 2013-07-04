@@ -35,8 +35,8 @@ namespace TapIt_WP8
 
         private string _htmlResponse = string.Empty; // get the string in html format
 
-      
- 
+
+
         #endregion
 
         #region EventsDecleration
@@ -64,7 +64,7 @@ namespace TapIt_WP8
                     if (!IsAdLoaded)
                     {
                         IsInternalLoad = true;
-                        Load();
+                        Task<bool> b = Load();
                     }
                     else
                     {
@@ -78,10 +78,6 @@ namespace TapIt_WP8
             }
         }
 
-        private async Task<bool> LoadAsyncData()
-        {
-            return await Load();
-        }
         // return control to add in UI tree
         public FrameworkElement ViewControl
         {
@@ -220,13 +216,17 @@ namespace TapIt_WP8
             base.OnContentLoad(sender, e);
         }
 
+        protected virtual void OnNavigating()
+        {
+        }
+
         /// <summary>
         ///  // The event is fired when user clicks on the web browser.
         /// </summary>
         void _webBrowser_Navigating(object sender, NavigatingEventArgs e)
         {
-            //// return; // temp - remove
             Debug.WriteLine("_webBrowser_Navigating");
+            OnNavigating();
 
             if (Navigating != null)
                 Navigating(sender, e);
@@ -285,7 +285,7 @@ namespace TapIt_WP8
             else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
                 PageOrientation.PortraitUp == deviceData.PageOrientation)
             {
-                height = deviceData.ScreenHeight - (SystemTray.IsVisible? SystemTrayHeightPortrait: 0) - 1;
+                height = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayHeightPortrait : 0) - 1;
             }
 
             return height;
@@ -311,7 +311,12 @@ namespace TapIt_WP8
                     retVal = JsonToHtml();
 
                     if (retVal)
-                        NavigateToHtml();
+                    {
+                        IsAdLoadedPending = true;
+
+                        if (!IsAdRotating)
+                            NavigateToHtml();
+                    }
                 }
             }
             catch (Exception ex)
@@ -328,8 +333,8 @@ namespace TapIt_WP8
             {
                 string response = JsonResponse.Html;
                 JsonParser jsnParser = new JsonParser();
-
-                _htmlResponse = jsnParser.WrapToHTML(response, null, null, JsonResponse);
+                _htmlResponse = jsnParser.WrapToHTML(response, null, null, JsonResponse,
+                    GetOrientationWidth(), GetOrientationHeight());
                 Debug.WriteLine("html response :" + _htmlResponse);
 
                 if (!string.IsNullOrEmpty(_htmlResponse))
@@ -346,9 +351,20 @@ namespace TapIt_WP8
             return isLoaded;
         }
 
-        private void NavigateToHtml()
+        protected void NavigateToHtml()
         {
             WebBrowser.NavigateToString(_htmlResponse);
+        }
+
+        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
+        {
+            base.DeviceOrientationChanged(pageOrientation);
+
+            if (JsonToHtml()) // set new viewport
+            {
+                IsInternalLoad = true;
+                NavigateToHtml();
+            }
         }
 
         ///<summary>

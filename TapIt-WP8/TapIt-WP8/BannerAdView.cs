@@ -17,7 +17,7 @@ namespace TapIt_WP8
     {
         #region Constants
 
-       //Banner ad size
+        //Banner ad size
         public const int _bannerHeight = 80, _bannerWidtht = 320;
 
         #endregion
@@ -25,9 +25,9 @@ namespace TapIt_WP8
         #region DataMembers
 
         //banner ad animation data members
-        private int _animationTimeInterval = 20;
-        private int _animationDuration = 3;
-
+        private int _animationTimeInterval = 10;
+        private int _animationDuration = 2;
+        private bool _IsLeftToRight = true;
         private DispatcherTimer _animationTimer = new DispatcherTimer();
         private Storyboard _storyboard = new Storyboard();
         private DoubleAnimation _doubleAnimation = new DoubleAnimation();
@@ -37,12 +37,10 @@ namespace TapIt_WP8
 
         #region Property
 
-
-
         public override int Width
         {
             get { return base.Width; }
-            set 
+            set
             {
                 // in case of Banner Ad the width should be equal to screen width
                 // ignore the "value"
@@ -112,22 +110,62 @@ namespace TapIt_WP8
         {
             _animationTimer.Tick += dispatcherTimer_Tick;
             _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
-
-            _doubleAnimation.From = 360;
-            _doubleAnimation.To = 0;
+            //if (!isRotate)
+            //{
+            //    _doubleAnimation.From = 360;
+            //    _doubleAnimation.To = 180;
+            //    isRotate = true;
+            //}
+            //else
+            //{
+            //    _doubleAnimation.From = 180;
+            //    _doubleAnimation.To = 0;
+            //    isRotate = false;
+            //}
             _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
-            
+
             WebBrowser.Projection = _planeProjection;
             Storyboard.SetTarget(_doubleAnimation, WebBrowser.Projection);
             Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationYProperty));
             _storyboard.Children.Add(_doubleAnimation);
-
+            _storyboard.Completed += _storyboard_Completed;
             _animationTimer.Start();
+        }
+
+        void _storyboard_Completed(object sender, EventArgs e)
+        {
+            IsAdRotating = false;
+            _IsLeftToRight = !_IsLeftToRight;
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            _storyboard.Begin();
+            bool doAnimation = false;
+            if (IsAdLoadedPending)
+            {
+                NavigateToHtml();
+                doAnimation = true;
+            }
+
+            if (_IsLeftToRight)
+            {
+                _doubleAnimation.From = 360;
+                _doubleAnimation.To = 180;
+                IsInternalLoad = true;
+                doAnimation = true;
+                Task<bool> b = Load();
+            }
+            else
+            {
+                _doubleAnimation.From = 180;
+                _doubleAnimation.To = 0;
+            }
+
+            if (doAnimation)
+            {
+                IsAdRotating = true;
+                _storyboard.Begin();
+            }
         }
 
         /// <summary>

@@ -34,9 +34,13 @@ namespace TapIt_WP8
         private string _sdkversion = TapItResource.SdkVersion;
 
         private bool _isAdLoaded = false;
+        private bool _isAdLoadedPending = false;
+
+
         private bool _isInternalLoad = false;
         private bool _isAdDisplayed = false;
         private bool _isAppActived = false;
+        private bool _isAdRorating = false;
 
         #endregion
 
@@ -75,35 +79,47 @@ namespace TapIt_WP8
 
         #region Property
 
-        public int SystemTrayWidthLandscape
+        protected bool IsAdLoadedPending
+        {
+            get { return _isAdLoadedPending; }
+            set { _isAdLoadedPending = value; }
+        }
+
+        protected bool IsAdRotating
+        {
+            get { return _isAdRorating; }
+            set { _isAdRorating = value; }
+        }
+
+        protected int SystemTrayWidthLandscape
         {
             get { return _systemTrayWidthLandscape; }
         }
 
-        public int SystemTrayHeightPortrait
+        protected int SystemTrayHeightPortrait
         {
             get { return _systemTrayHeightPortrait; }
         }
 
-        public bool IsAppActived
+        protected bool IsAppActived
         {
             get { return _isAppActived; }
             set { _isAppActived = value; }
         }
 
-        public bool IsAdDisplayed
+        protected bool IsAdDisplayed
         {
             get { return _isAdDisplayed; }
             set { _isAdDisplayed = value; }
         }
 
-        public bool IsInternalLoad
+        protected bool IsInternalLoad
         {
             get { return _isInternalLoad; }
             set { _isInternalLoad = value; }
         }
 
-        public bool IsAdLoaded
+        protected bool IsAdLoaded
         {
             get { return _isAdLoaded; }
             set { _isAdLoaded = value; }
@@ -115,7 +131,7 @@ namespace TapIt_WP8
             set;
         }
 
-        public JsonDataContract JsonResponse
+        protected JsonDataContract JsonResponse
         {
             get { return _jsonResponse; }
         }
@@ -131,7 +147,7 @@ namespace TapIt_WP8
             set { _baseURL = value; }
         }
 
-        public AdType Adtype
+        protected AdType Adtype
         {
             get { return _adtype; }
             set { _adtype = value; }
@@ -155,13 +171,13 @@ namespace TapIt_WP8
             set { _height = value; }
         }
 
-        public int AdHeight
+        protected int AdHeight
         {
             get { return _adHeight; }
             set { _adHeight = value; }
         }
 
-        public int AdWidth
+        protected int AdWidth
         {
             get { return _adWidth; }
             set { _adWidth = value; }
@@ -239,7 +255,7 @@ namespace TapIt_WP8
         ///</summary>
         protected void OnError(string strMsg, Exception ex = null)
         {
-            IsAppActived = false; 
+            IsAppActived = false;
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
@@ -269,6 +285,7 @@ namespace TapIt_WP8
         protected virtual void OnContentLoad(object sender, NavigationEventArgs e)
         {
             Debug.WriteLine("OnContentLoad");
+            IsAdLoadedPending = false;
             IsAdLoaded = true;
             IsAdDisplayed = false;
 

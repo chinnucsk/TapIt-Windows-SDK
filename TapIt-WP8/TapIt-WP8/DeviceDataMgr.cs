@@ -19,7 +19,7 @@ using Windows.Networking.Connectivity;
 
 namespace TapIt_WP8
 {
-    public class DeviceDataMgr
+    class DeviceDataMgr
     {
         #region DataMember
 

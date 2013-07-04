@@ -25,7 +25,6 @@ namespace TapIt_WP8
         #region Data member
 
         private Button _closeBtn;
-        private bool _isSystemTray = false;
 
         #endregion
 
@@ -103,6 +102,11 @@ namespace TapIt_WP8
         #endregion
 
         #region Methods
+
+        protected override void OnNavigating()
+        {
+            ViewControl.Visibility = Visibility.Collapsed;
+        }
 
         /// <summary>
         /// animation for banner ad
