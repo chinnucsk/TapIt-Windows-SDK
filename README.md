@@ -59,6 +59,12 @@ _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
 // handle the orientation change
 _bannerAdView.DeviceOrientationChanged(e.Orientation);
 
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+   _bannerAdView.NavigationService = this.NavigationService;
+}
+
 ````
 For complete example, please refer
 https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-WP8-TestApp/BannerAdPage.xaml.cs 
@@ -103,6 +109,12 @@ _interstitialAdView.Visible = Visibility.Collapsed;
 // handle the orientation change
 _interstitialAdView.DeviceOrientationChanged(e.Orientation);
 
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+   _interstitialAdView.NavigationService = this.NavigationService;
+}
+
 ````
 For complete example, please refer 
 https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-WP8-TestApp/InterstitialAdPage.xaml.cs 
@@ -146,9 +158,11 @@ _AdPromptView.ErrorEvent += _AdPromptView_ErrorEvent;
 // handle the orientation change
 _AdPromptView.DeviceOrientationChanged(e.Orientation);
 
-// Handle the back key press event to remove the Adprompt.
-// On back key press event call following method.
-_AdPromptView.OnBackKeypressed(e);
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+   _AdPromptView.NavigationService = this.NavigationService;
+}
 
 
 ````
