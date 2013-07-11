@@ -97,6 +97,24 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed To Navigate.
+        /// </summary>
+        internal static string ErrorMsg {
+            get {
+                return ResourceManager.GetString("ErrorMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 13A91515-EA40-4E1C-A322-09347B84DCED.txt.
+        /// </summary>
+        internal static string FileName {
+            get {
+                return ResourceManager.GetString("FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to json.
         /// </summary>
         internal static string Format {
@@ -120,6 +138,42 @@ namespace TapIt_WP8 {
         internal static string SdkVersion {
             get {
                 return ResourceManager.GetString("SdkVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        internal static string SuccessMesg {
+            get {
+                return ResourceManager.GetString("SuccessMesg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Is Already Tracked.
+        /// </summary>
+        internal static string TrackerMesg {
+            get {
+                return ResourceManager.GetString("TrackerMesg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /adconvert.php.
+        /// </summary>
+        internal static string TrackHandler {
+            get {
+                return ResourceManager.GetString("TrackHandler", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to a.tapit.com.
+        /// </summary>
+        internal static string TrackHost {
+            get {
+                return ResourceManager.GetString("TrackHost", resourceCulture);
             }
         }
     }

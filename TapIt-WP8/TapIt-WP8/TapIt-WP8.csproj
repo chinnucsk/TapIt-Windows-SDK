@@ -91,12 +91,16 @@
     <Compile Include="InterstitialAdView.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\InAppBrowserPage.xaml.cs">
+      <DependentUpon>InAppBrowserPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TapItHttpRequest.cs" />
     <Compile Include="TapItResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TapItResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Tracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TapItResource.resx">
@@ -105,8 +109,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\back.png" />
     <Content Include="Images\interstitial_close_button%402x.png" />
-    <Content Include="Images\Test_Image.png" />
+    <Content Include="Images\next.png" />
+    <Content Include="Images\refresh.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Resources\InAppBrowserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

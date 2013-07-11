@@ -35,8 +35,6 @@ namespace TapIt_WP8
 
         private string _htmlResponse = string.Empty; // get the string in html format
 
-
-
         #endregion
 
         #region EventsDecleration
@@ -124,7 +122,6 @@ namespace TapIt_WP8
             //initailization of grid
             _maingrid = new Grid();
             _maingrid.Name = TapItResource.BrowserName;
-            //Maingrid.Background = new SolidColorBrush(Colors.Blue);
 
             //nitailization of browser control
             _webBrowser = new WebBrowser();
@@ -139,15 +136,6 @@ namespace TapIt_WP8
 
             //events  for main grid
             _maingrid.SizeChanged += _maingrid_SizeChanged;
-
-            ////////////////
-            // temp code - remove
-
-            ////Maingrid.Visibility = Visibility.Visible;
-            ////WebBrowser.Navigate(new Uri("http://172.27.47.147/test", UriKind.Absolute));
-
-
-            //////////////////
 
             //events  for web control
             _webBrowser.Loaded += _webBrowser_Loaded;
@@ -172,6 +160,12 @@ namespace TapIt_WP8
 
             _webBrowser.Height = height;
             _webBrowser.Width = width;
+
+            if (JsonToHtml(GetOrientationWidth(), height)) // set new viewport
+            {
+                IsInternalLoad = true;
+                NavigateToHtml();
+            }
         }
 
         /// <summary>
@@ -231,10 +225,21 @@ namespace TapIt_WP8
             if (Navigating != null)
                 Navigating(sender, e);
 
+            if (NavigationServiceRef != null)
+            {
+               string encodedUri = WebUtility.UrlEncode(e.Uri.ToString());
+               NavigationServiceRef.Navigate(new Uri(string.Format
+                            ("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?myparameter1={0}",
+                            encodedUri), UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                OnError(TapItResource.ErrorMsg);
+            }
             e.Cancel = true;
-            WebBrowserTask browserTask = new WebBrowserTask();
-            browserTask.Uri = e.Uri;
-            browserTask.Show();
+            //WebBrowserTask browserTask = new WebBrowserTask();
+            //browserTask.Uri = e.Uri;
+            //browserTask.Show();
         }
 
         #endregion
@@ -299,34 +304,29 @@ namespace TapIt_WP8
                 SetViewHeight(GetOrientationHeight());
         }
 
-        public override async Task<bool> Load()
+        public override async Task<bool> Load(bool bRaiseError = true)
         {
             bool retVal = false;
             try
             {
-                retVal = await base.Load();
+                retVal = await base.Load(bRaiseError);
 
                 if (retVal)
                 {
-                    retVal = JsonToHtml();
-
-                    if (retVal)
-                    {
-                        IsAdLoadedPending = true;
-
-                        if (!IsAdRotating)
-                            NavigateToHtml();
-                    }
+                    int ViewPortHeight = (int)WebBrowser.ActualHeight;
+                    retVal = JsonToHtml(GetOrientationWidth(), (ViewPortHeight > 0 ? ViewPortHeight : GetOrientationHeight()));
                 }
             }
             catch (Exception ex)
             {
-                OnError("Error mesg in Load()" + ex);
+                if (bRaiseError)
+                    OnError("Error in Load()" + ex);
             }
+
             return retVal;
         }
 
-        private bool JsonToHtml()
+        private bool JsonToHtml(int ViewPortWidth, int ViewPortHeight)
         {
             bool isLoaded = false;
             try
@@ -334,7 +334,7 @@ namespace TapIt_WP8
                 string response = JsonResponse.Html;
                 JsonParser jsnParser = new JsonParser();
                 _htmlResponse = jsnParser.WrapToHTML(response, null, null, JsonResponse,
-                    GetOrientationWidth(), GetOrientationHeight());
+                    ViewPortWidth, ViewPortHeight);
                 Debug.WriteLine("html response :" + _htmlResponse);
 
                 if (!string.IsNullOrEmpty(_htmlResponse))
@@ -359,16 +359,10 @@ namespace TapIt_WP8
         public override void DeviceOrientationChanged(PageOrientation pageOrientation)
         {
             base.DeviceOrientationChanged(pageOrientation);
-
-            if (JsonToHtml()) // set new viewport
-            {
-                IsInternalLoad = true;
-                NavigateToHtml();
-            }
         }
 
         ///<summary>
-        ///
+        /// Code to execute when the application is activated (brought to the foreground)
         ///</summary>
         public void AppActivated()
         {
@@ -381,7 +375,7 @@ namespace TapIt_WP8
         }
 
         ///<summary>
-        ///
+        /// Code to execute when the application is deactivated (sent to background)
         ///</summary>
         public void AppDeactivated()
         {

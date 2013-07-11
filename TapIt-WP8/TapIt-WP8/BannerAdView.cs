@@ -25,8 +25,8 @@ namespace TapIt_WP8
         #region DataMembers
 
         //banner ad animation data members
-        private int _animationTimeInterval = 10;
-        private int _animationDuration = 2;
+        private int _animationTimeInterval = 60;
+        private int _animationDuration = 3;
         private bool _IsLeftToRight = true;
         private DispatcherTimer _animationTimer = new DispatcherTimer();
         private Storyboard _storyboard = new Storyboard();
@@ -53,9 +53,15 @@ namespace TapIt_WP8
             get { return _animationTimeInterval; }
             set
             {
-                // todo: need to validate value
-                _animationTimeInterval = value;
-                _animationTimer.Interval = new TimeSpan(0, 0, value);
+                if (value > 0)
+                {
+                    _animationTimeInterval = value;
+                    _animationTimer.Interval = new TimeSpan(0, 0, value);
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -64,9 +70,15 @@ namespace TapIt_WP8
             get { return _animationDuration; }
             set
             {
-                // todo: need to validate value
-                _animationDuration = value;
-                _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(value));
+                if (value > 0)
+                {
+                    _animationDuration = value;
+                    _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(value));
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -110,18 +122,6 @@ namespace TapIt_WP8
         {
             _animationTimer.Tick += dispatcherTimer_Tick;
             _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
-            //if (!isRotate)
-            //{
-            //    _doubleAnimation.From = 360;
-            //    _doubleAnimation.To = 180;
-            //    isRotate = true;
-            //}
-            //else
-            //{
-            //    _doubleAnimation.From = 180;
-            //    _doubleAnimation.To = 0;
-            //    isRotate = false;
-            //}
             _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
 
             WebBrowser.Projection = _planeProjection;
@@ -134,38 +134,56 @@ namespace TapIt_WP8
 
         void _storyboard_Completed(object sender, EventArgs e)
         {
-            IsAdRotating = false;
             _IsLeftToRight = !_IsLeftToRight;
+        }
+
+        public override async Task<bool> Load(bool bRaiseError = true)
+        {
+            bool retVal = false;
+            try
+            {
+                retVal = await base.Load(bRaiseError);
+
+                if (retVal)
+                {
+                    if (IsTimerInitiatedLoad)
+                    {
+                        IsAdLoadedPending = true;
+                    }
+                    else
+                    {
+                        NavigateToHtml();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (bRaiseError)
+                    OnError("Error mesg in Load()" + ex);
+            }
+
+            return retVal;
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            bool doAnimation = false;
+            if (this.Visible == Visibility.Collapsed)
+                return;
+
             if (IsAdLoadedPending)
             {
                 NavigateToHtml();
-                doAnimation = true;
-            }
-
-            if (_IsLeftToRight)
-            {
-                _doubleAnimation.From = 360;
-                _doubleAnimation.To = 180;
-                IsInternalLoad = true;
-                doAnimation = true;
-                Task<bool> b = Load();
             }
             else
             {
-                _doubleAnimation.From = 180;
-                _doubleAnimation.To = 0;
+                IsTimerInitiatedLoad = true;
+                Task<bool> b = Load(false);
             }
 
-            if (doAnimation)
-            {
-                IsAdRotating = true;
-                _storyboard.Begin();
-            }
+            _doubleAnimation.From = 360;
+            _doubleAnimation.To = 0;
+
+            _storyboard.Begin();
         }
 
         /// <summary>

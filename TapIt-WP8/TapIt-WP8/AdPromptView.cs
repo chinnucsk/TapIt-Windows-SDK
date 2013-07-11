@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +26,8 @@ namespace TapIt_WP8
         }
 
         #endregion
+
+        #region Property
 
         //Show the AdPrompt
         public override Visibility Visible
@@ -57,6 +60,8 @@ namespace TapIt_WP8
                 }
             }
         }
+
+        #endregion
 
         #region Abstract methods
 
@@ -98,9 +103,18 @@ namespace TapIt_WP8
                     }
                     else
                     {
-                        WebBrowserTask browserTask = new WebBrowserTask();
-                        browserTask.Uri = new Uri(JsonResponse.clickUrl);
-                        browserTask.Show();
+                        Debug.WriteLine("Adprompt_Navigating");
+                        if (NavigationServiceRef != null)
+                        {
+
+                            string uri =  WebUtility.UrlEncode(JsonResponse.clickUrl);
+                            NavigationServiceRef.Navigate(new Uri(string.Format("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?myparameter1={0}", uri), UriKind.RelativeOrAbsolute));
+                        }
+                        else
+                        {
+                            // todo: raise error
+                            OnError("Failed to navigate");
+                        }
                     }
                 }
                 IsAdDisplayed = true;
@@ -111,9 +125,9 @@ namespace TapIt_WP8
             }
         }
 
-        public override async Task<bool> Load()
+        public override async Task<bool> Load(bool bRaiseError = true)
         {
-            bool retVal = await base.Load();
+            bool retVal = await base.Load(bRaiseError);
 
             if (retVal)
             {
@@ -124,15 +138,7 @@ namespace TapIt_WP8
 
             return retVal;
         }
-
-        // for Orientation change event
-        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
-        {
-            //base.DeviceOrientationChanged(pageOrientation);
-            //SetAdPromptPosition();
-        }
-
-
+        
         #endregion
 
     }

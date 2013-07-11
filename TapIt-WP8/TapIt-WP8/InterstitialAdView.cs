@@ -35,7 +35,6 @@ namespace TapIt_WP8
             SetAdType();
             SetAdSize(_intestitialAdHeight, _intestitialAdWidth);
             AddCloseButton();
-            RotateinterstitialAd();
         }
 
         #endregion
@@ -50,9 +49,7 @@ namespace TapIt_WP8
                 base.Visible = value;
                 if (Visibility.Visible == value)
                 {
-                    RotateinterstitialAd();
-                    //_isSystemTray = SystemTray.IsVisible;
-                    //SystemTray.IsVisible = false;
+                    RotateInterstitialAd();
                 }
                 else
                 {
@@ -60,6 +57,7 @@ namespace TapIt_WP8
                 }
             }
         }
+
 
         public override int Width
         {
@@ -103,6 +101,27 @@ namespace TapIt_WP8
 
         #region Methods
 
+        public override async Task<bool> Load(bool bRaiseError = true)
+        {
+            bool retVal = false;
+            try
+            {
+                retVal = await base.Load(bRaiseError);
+
+                if (retVal)
+                {
+                    NavigateToHtml();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (bRaiseError)
+                    OnError("Error mesg in Load()" + ex);
+            }
+
+            return retVal;
+        }
+
         protected override void OnNavigating()
         {
             ViewControl.Visibility = Visibility.Collapsed;
@@ -111,7 +130,7 @@ namespace TapIt_WP8
         /// <summary>
         /// animation for banner ad
         /// </summary>
-        private void RotateinterstitialAd()
+        private void RotateInterstitialAd()
         {
             Storyboard _storyBourd = new Storyboard();
             DoubleAnimation _doubleAnimation = new DoubleAnimation();
@@ -153,6 +172,11 @@ namespace TapIt_WP8
         void _closeBtn_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Visible = Visibility.Collapsed;
+        }
+
+        protected override void OnContentLoad(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnContentLoad(sender, e);
         }
 
         #endregion

@@ -129,6 +129,12 @@
   <data name="BrowserName" xml:space="preserve">
     <value>TapItAdViewControl</value>
   </data>
+  <data name="ErrorMsg" xml:space="preserve">
+    <value>Failed To Navigate</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>13A91515-EA40-4E1C-A322-09347B84DCED.txt</value>
+  </data>
   <data name="Format" xml:space="preserve">
     <value>json</value>
   </data>
@@ -137,5 +143,17 @@
   </data>
   <data name="SdkVersion" xml:space="preserve">
     <value>wp-v1.0.0</value>
+  </data>
+  <data name="SuccessMesg" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="TrackerMesg" xml:space="preserve">
+    <value>Install Is Already Tracked</value>
+  </data>
+  <data name="TrackHandler" xml:space="preserve">
+    <value>/adconvert.php</value>
+  </data>
+  <data name="TrackHost" xml:space="preserve">
+    <value>a.tapit.com</value>
   </data>
 </root>

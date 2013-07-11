@@ -36,11 +36,14 @@ namespace TapIt_WP8
         private bool _isAdLoaded = false;
         private bool _isAdLoadedPending = false;
 
-
         private bool _isInternalLoad = false;
         private bool _isAdDisplayed = false;
         private bool _isAppActived = false;
-        private bool _isAdRorating = false;
+        private bool _isTimerInitiatedLoad = false;
+
+        private NavigationService _navigationService = null;
+
+        private Dictionary<string, string> _urlAdditionalParameters = new Dictionary<string,string>();
 
         #endregion
 
@@ -49,6 +52,15 @@ namespace TapIt_WP8
         abstract protected void SetAdType();
 
         abstract protected void SetAdSize(int height, int width);
+
+        #endregion
+
+        #region Constructor
+
+        public AdViewBase()
+        {
+            
+        }
 
         #endregion
 
@@ -79,16 +91,32 @@ namespace TapIt_WP8
 
         #region Property
 
+        public Dictionary<string, string> UrlAdditionalParameters
+        {
+            get { return _urlAdditionalParameters; }
+            set { _urlAdditionalParameters = value; }
+        }
+
+        public NavigationService NavigationService
+        {
+            set { _navigationService = value; }
+        }
+
+        protected NavigationService NavigationServiceRef
+        {
+            get { return _navigationService; }
+        }
+
+        protected bool IsTimerInitiatedLoad
+        {
+            get { return _isTimerInitiatedLoad; }
+            set { _isTimerInitiatedLoad = value; }
+        }
+
         protected bool IsAdLoadedPending
         {
             get { return _isAdLoadedPending; }
             set { _isAdLoadedPending = value; }
-        }
-
-        protected bool IsAdRotating
-        {
-            get { return _isAdRorating; }
-            set { _isAdRorating = value; }
         }
 
         protected int SystemTrayWidthLandscape
@@ -215,14 +243,23 @@ namespace TapIt_WP8
                 "&lat=" + deviceData.Latitude +
                 "&long=" + deviceData.Longitude;
 
-            // local server url. // temp code for testing purpose
-            // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=15087&format=json";
-            Debug.WriteLine("Server Url: " + AdSrvURL);
+            for (int i = 0; i < UrlAdditionalParameters.Count; i++)
+            {
+                AdSrvURL = AdSrvURL += "&" 
+                                       + UrlAdditionalParameters.ElementAt(i).Key 
+                                       +"="
+                                       + UrlAdditionalParameters.ElementAt(i).Value;
+            }
+
+
+                // local server url. // temp code for testing purpose
+                // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=15087&format=json";
+                Debug.WriteLine("Server Url: " + AdSrvURL);
 
             return AdSrvURL;
         }
 
-        public virtual async Task<bool> Load()
+        public virtual async Task<bool> Load(bool bRaiseError = true)
         {
             bool isLoaded = false;
             try
@@ -243,7 +280,8 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in Load() :" + ex.Message);
-                OnError("Exception in Load()", ex);
+                if (bRaiseError)
+                    OnError("Exception in Load()", ex);
             }
 
             return isLoaded;
@@ -256,6 +294,8 @@ namespace TapIt_WP8
         protected void OnError(string strMsg, Exception ex = null)
         {
             IsAppActived = false;
+            IsInternalLoad = false;
+
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
@@ -293,10 +333,13 @@ namespace TapIt_WP8
             {
                 if (!IsAppActived)
                 {
-                    LoadCompletedEventHandler handler = ContentLoaded;
-                    if (handler != null)
+                    if (!IsTimerInitiatedLoad)
                     {
-                        handler(sender, e);
+                        LoadCompletedEventHandler handler = ContentLoaded;
+                        if (handler != null)
+                        {
+                            handler(sender, e);
+                        }
                     }
                 }
             }
@@ -307,6 +350,7 @@ namespace TapIt_WP8
             }
 
             IsAppActived = false;
+            IsTimerInitiatedLoad = false;
         }
 
         #endregion
