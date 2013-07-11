@@ -9,6 +9,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using TapIt_WP8;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TapIt_WP8_TestApp
 {
@@ -51,13 +52,16 @@ namespace TapIt_WP8_TestApp
             _interstitialAdView.Navigating += interstitialAdView_navigating;
             _interstitialAdView.Navigated += interstitialAdView_navigated;
             _interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
-
-            //string nameSpace = this.GetType().Namespace;
         }
 
         #endregion
 
         #region Events
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            _interstitialAdView.NavigationService = this.NavigationService;
+        }
 
         ///<summary>
         ///This event is fired when the app came to foreground

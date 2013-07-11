@@ -44,6 +44,10 @@ namespace TapIt_WP8_TestApp
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
+            _bannerAdView.UrlAdditionalParameters["key1"] = "value1";
+            _bannerAdView.UrlAdditionalParameters["key2"] = "value2";
+            _bannerAdView.UrlAdditionalParameters["key3"] = "value3";
+
             //attached events
             _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
             _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
@@ -51,6 +55,8 @@ namespace TapIt_WP8_TestApp
             _bannerAdView.Navigating += _bannerAdView_navigating;
             _bannerAdView.Navigated += _bannerAdView_navigated;
             _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
+
+           
         }
 
         #endregion
@@ -77,6 +83,11 @@ namespace TapIt_WP8_TestApp
         #endregion
 
         #region Events
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            _bannerAdView.NavigationService = this.NavigationService;
+        }
 
         ///<summary>
         ///This event is fired when the app came to foreground
@@ -117,7 +128,6 @@ namespace TapIt_WP8_TestApp
         void _bannerAdView_navigating(object sender, NavigatingEventArgs e)
         {
             Debug.WriteLine("_bannerAdView_navigating");
-            MessageBox.Show("_bannerAdView_navigating");
         }
 
         ///<summary>
@@ -177,6 +187,12 @@ namespace TapIt_WP8_TestApp
         }
 
         #endregion
+
+        private void installBtn_Click(object sender, RoutedEventArgs e)
+        {
+            InstallTracker tracker = InstallTracker.Instance;
+            Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
+        }
 
 
     }

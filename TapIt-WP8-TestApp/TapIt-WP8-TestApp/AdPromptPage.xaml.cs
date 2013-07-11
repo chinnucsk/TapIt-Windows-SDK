@@ -47,6 +47,11 @@ namespace TapIt_WP8_TestApp
 
         #region Events
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            _AdPromptView.NavigationService = this.NavigationService;
+        }
+
         //orientation change event
         private void DeviceOrientationChanged(object sender, OrientationChangedEventArgs e)
         {
@@ -76,11 +81,6 @@ namespace TapIt_WP8_TestApp
         {
             progressring.Visibility = Visibility.Collapsed;
             MessageBox.Show(strErrorMsg);
-        }
-
-        private void PhoneApplicationPage_BackKeyPress_1(object sender, CancelEventArgs e)
-        {
-            
         }
 
         private void loadBtn_Click(object sender, RoutedEventArgs e)
