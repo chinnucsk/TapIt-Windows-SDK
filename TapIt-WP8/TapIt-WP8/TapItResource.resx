@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdPromptData" xml:space="preserve">
+  <data name="NoAdPromptData" xml:space="preserve">
     <value>No Data Available for AdPrompt</value>
   </data>
   <data name="BaseUrl" xml:space="preserve">
@@ -126,10 +126,10 @@
   <data name="BaseUrl_Local" xml:space="preserve">
     <value>http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php</value>
   </data>
-  <data name="BrowserName" xml:space="preserve">
+  <data name="AdControlName" xml:space="preserve">
     <value>TapItAdViewControl</value>
   </data>
-  <data name="ErrorMsg" xml:space="preserve">
+  <data name="NavigationErrorMsg" xml:space="preserve">
     <value>Failed To Navigate</value>
   </data>
   <data name="FileName" xml:space="preserve">
@@ -155,5 +155,8 @@
   </data>
   <data name="TrackHost" xml:space="preserve">
     <value>a.tapit.com</value>
+  </data>
+  <data name="ErrorResponse" xml:space="preserve">
+    <value>Response Contains Error</value>
   </data>
 </root>

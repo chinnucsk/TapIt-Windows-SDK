@@ -47,17 +47,13 @@ namespace TapIt_WP8
             set
             {
                 base.Visible = value;
+               
                 if (Visibility.Visible == value)
                 {
-                    RotateInterstitialAd();
-                }
-                else
-                {
-                    //SystemTray.IsVisible = _isSystemTray;
+                    //RotateInterstitialAd();
                 }
             }
         }
-
 
         public override int Width
         {
@@ -116,13 +112,13 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 if (bRaiseError)
-                    OnError("Error mesg in Load()" + ex);
+                    OnError("Error in Load(): " + ex);
             }
 
             return retVal;
         }
 
-        protected override void OnNavigating()
+        protected override void Navigating()
         {
             ViewControl.Visibility = Visibility.Collapsed;
         }

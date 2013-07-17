@@ -61,11 +61,11 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Data Available for AdPrompt.
+        ///   Looks up a localized string similar to TapItAdViewControl.
         /// </summary>
-        internal static string AdPromptData {
+        internal static string AdControlName {
             get {
-                return ResourceManager.GetString("AdPromptData", resourceCulture);
+                return ResourceManager.GetString("AdControlName", resourceCulture);
             }
         }
         
@@ -88,20 +88,11 @@ namespace TapIt_WP8 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TapItAdViewControl.
+        ///   Looks up a localized string similar to Response Contains Error.
         /// </summary>
-        internal static string BrowserName {
+        internal static string ErrorResponse {
             get {
-                return ResourceManager.GetString("BrowserName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed To Navigate.
-        /// </summary>
-        internal static string ErrorMsg {
-            get {
-                return ResourceManager.GetString("ErrorMsg", resourceCulture);
+                return ResourceManager.GetString("ErrorResponse", resourceCulture);
             }
         }
         
@@ -129,6 +120,24 @@ namespace TapIt_WP8 {
         internal static string LoadNewAd {
             get {
                 return ResourceManager.GetString("LoadNewAd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed To Navigate.
+        /// </summary>
+        internal static string NavigationErrorMsg {
+            get {
+                return ResourceManager.GetString("NavigationErrorMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Data Available for AdPrompt.
+        /// </summary>
+        internal static string NoAdPromptData {
+            get {
+                return ResourceManager.GetString("NoAdPromptData", resourceCulture);
             }
         }
         

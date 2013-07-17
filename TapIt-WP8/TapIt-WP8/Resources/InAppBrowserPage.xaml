@@ -16,7 +16,7 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent" HorizontalAlignment="Center">
         <Grid>
-            <phone:WebBrowser IsScriptEnabled="True" Name="webBrowser" HorizontalAlignment="Center" VerticalAlignment="Top" Navigated="webBrowser_Navigated" Height="Auto" Width="Auto" NavigationFailed="webBrowser_NavigationFailed" Unloaded="webBrowser_Unloaded"/>
+            <phone:WebBrowser IsScriptEnabled="True" Name="webBrowser" HorizontalAlignment="Center" VerticalAlignment="Top" Navigated="webBrowser_Navigated" Height="Auto" Width="Auto" NavigationFailed="webBrowser_NavigationFailed" LoadCompleted="webBrowser_LoadCompleted"/>
             <Grid Name="navigationGrid" HorizontalAlignment="Center" Background="#FF2574E6" Height="100" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Grid >
@@ -36,24 +36,8 @@
                     </Button>
                 </StackPanel>
             </Grid>
-
-            <!--TitlePanel contains the name of the application and page title-->
-            <!--<StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>-->
-
-            <!--ContentPanel - place additional content here-->
-            <!--<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
-        </Grid>-->
-
         </Grid>
-        <ProgressBar IsIndeterminate="True"  Name="progressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Height="146" Width="313" Visibility="Visible" RenderTransformOrigin="0.5,0.5" Margin="91.5,324.345,70.5,297.655" UseLayoutRounding="False" d:LayoutRounding="Auto">
-            <ProgressBar.RenderTransform>
-                <CompositeTransform SkewY="-0.843" TranslateY="-0.735"/>
-            </ProgressBar.RenderTransform>
-        </ProgressBar>
+        <ProgressBar IsIndeterminate="True"  Name="progressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Height="146" Width="475" Visibility="Visible" Margin="0,340,0,314"/>
     </Grid>
 
 </phone:PhoneApplicationPage>

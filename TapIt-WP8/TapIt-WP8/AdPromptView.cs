@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using TapIt_WP8.Resources;
 
 namespace TapIt_WP8
 {
@@ -22,7 +23,6 @@ namespace TapIt_WP8
 
         public AdPromptView()
         {
-
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace TapIt_WP8
             get { return _visible; }
             set
             {
-                if (value == Visibility.Visible)
+                if (Visibility.Visible == value)
                 {
                     if (IsAdDisplayed)
                     {
@@ -104,16 +104,25 @@ namespace TapIt_WP8
                     else
                     {
                         Debug.WriteLine("Adprompt_Navigating");
-                        if (NavigationServiceRef != null)
-                        {
 
-                            string uri =  WebUtility.UrlEncode(JsonResponse.clickUrl);
-                            NavigationServiceRef.Navigate(new Uri(string.Format("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?myparameter1={0}", uri), UriKind.RelativeOrAbsolute));
+                        bool success = false;
+                        string encodedUri = String.Empty;
+                        if (GetNavigationServiceRef != null)
+                        {
+                            InAppBrowserPage._adViewBase = this;
+                            encodedUri = WebUtility.UrlEncode(JsonResponse.clickUrl);
+                            success = GetNavigationServiceRef.Navigate(new Uri(string.Format
+                                   ("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?navigatingUri={0}"
+                                    , encodedUri), UriKind.RelativeOrAbsolute));
+                        }
+
+                        if (success)
+                        {
+                            OnNavigatingToInAppBrowser(encodedUri);
                         }
                         else
                         {
-                            // todo: raise error
-                            OnError("Failed to navigate");
+                            OnError(TapItResource.NavigationErrorMsg);
                         }
                     }
                 }
@@ -121,7 +130,7 @@ namespace TapIt_WP8
             }
             else
             {
-                OnError(TapItResource.AdPromptData);
+                OnError(TapItResource.NoAdPromptData);
             }
         }
 
@@ -138,7 +147,7 @@ namespace TapIt_WP8
 
             return retVal;
         }
-        
+
         #endregion
 
     }

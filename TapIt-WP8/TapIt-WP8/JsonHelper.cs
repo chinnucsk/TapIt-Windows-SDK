@@ -50,12 +50,13 @@ namespace TapIt_WP8
         public JsonDataContract ParseJson(string jsonResponse)
         {
             JsonDataContract jsonHlpr = null;
-            //Create a stream to serialize the object to.
 
+            //Create a stream to serialize the object to.
             try
             {
                 //Serializes objects to the JavaScript 
                 DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(JsonDataContract));
+
                 //MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(jsonResponse));
                 MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonResponse));
                 jsonHlpr = (JsonDataContract)jsonSerializer.ReadObject(ms);
@@ -72,27 +73,23 @@ namespace TapIt_WP8
         ///<summary>
         ///convert string response to html format
         ///</summary>
-        public String WrapToHTML(String data, String bridgeScriptPath, String scriptPath,
-            JsonDataContract helper, int width, int height)
+        public String WrapToHTML(String data, JsonDataContract helper, int width, int height)
         {
-            int TableWidth = width;
-            int TableHeight = height-1;
             string strHTML = "<html><head>"
                 + "<meta name='viewport' content='"
                 + "width="
-                + TableWidth.ToString()
+                + width.ToString()
                 + ", height="
-                + TableHeight.ToString()
+                + height.ToString()
                 + ", initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />"
                 + "<title>Advertisement</title> "
-                + "<script type=\"text/css\">a img {border: none;}</script>"
                 + "</head>"
-                + "<body style=\"margin:0; padding:0; overflow:hidden; background-color:transparent;\">"
+                + "<body style=\"margin:0; padding:0; overflow:hidden; background-color:black;\">"
                 + "<table style=\"width: "
-                + width.ToString()
+                + (width - 2).ToString()
                 + "px; height: "
-                + height.ToString()
-                + "px; vertical-align:central; background-color: black;\">" // todo: color hardcoding - expose as property or use theme color
+                + (height - 2).ToString()
+                + "px; vertical-align:central; background-color: black;\">"
                 + "<tr>"
                 + "<td style=\"text-align:center;\">"
                 + "<style type=\"text/css\">a img {border:none;}</style>"

@@ -14,14 +14,14 @@ namespace TapIt_WP8
     // Conversion and Installation Tracker. Sends a notification to TapIt servers
     // with UDID, UA, and namespace Name
 
-    public class InstallTracker
+    public class Tracker
     {
         #region Data Members
 
         private static string TRACK_HOST = TapItResource.TrackHost;
         private static string TRACK_HANDLER = TapItResource.TrackHandler;
 
-        private static InstallTracker _instance;
+        private static Tracker _instance;
 
         private string FileName = TapItResource.FileName;
 
@@ -29,23 +29,23 @@ namespace TapIt_WP8
 
         #region Constructor
 
-        private InstallTracker()
+        private Tracker()
         {
-
         }
 
         #endregion
 
         #region Property
 
-        public static InstallTracker Instance
+        public static Tracker Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new InstallTracker();
+                    _instance = new Tracker();
                 }
+
                 return _instance;
             }
         }
@@ -99,7 +99,7 @@ namespace TapIt_WP8
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception in ReportInstall()" + ex.Message);
+                Debug.WriteLine("Exception in ReportInstall(): " + ex.Message);
             }
 
             return isInstall;
@@ -123,7 +123,7 @@ namespace TapIt_WP8
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception in TrackInstall()" + ex.Message);
+                Debug.WriteLine("Exception in TrackInstall(): " + ex.Message);
             }
 
             return retVal;
@@ -165,7 +165,7 @@ namespace TapIt_WP8
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception in ReportEvent()" + ex.Message);
+                Debug.WriteLine("Exception in ReportEvent(): " + ex.Message);
             }
 
             return isEventTrack;

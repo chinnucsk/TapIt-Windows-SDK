@@ -12,7 +12,7 @@ namespace TapIt_WP8
     public class TapItHttpRequest
     {
         ///<summary>
-        ///get the json data in string format
+        ///get the web response in string format
         ///</summary>
         public async Task<string> HttpRequest(String url)
         {
@@ -23,7 +23,6 @@ namespace TapIt_WP8
                 HttpWebRequest httpWebRequest = HttpWebRequest.CreateHttp(url);
 
                 string strUA = httpWebRequest.UserAgent;
-
 
                 //Begins and end an asynchronous request to an Internet resource
                 var response = (HttpWebResponse)(await Task<WebResponse>.Factory.FromAsync(httpWebRequest.BeginGetResponse, httpWebRequest.EndGetResponse, null));

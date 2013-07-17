@@ -132,11 +132,6 @@ namespace TapIt_WP8
             _animationTimer.Start();
         }
 
-        void _storyboard_Completed(object sender, EventArgs e)
-        {
-            _IsLeftToRight = !_IsLeftToRight;
-        }
-
         public override async Task<bool> Load(bool bRaiseError = true)
         {
             bool retVal = false;
@@ -159,10 +154,28 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 if (bRaiseError)
-                    OnError("Error mesg in Load()" + ex);
+                    OnError("Error in Load(): " + ex);
             }
 
             return retVal;
+        }
+      
+        /// <summary>
+        /// orientation change 
+        /// </summary>
+        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
+        {
+            base.DeviceOrientationChanged(pageOrientation);
+            SetSizeToScreen();
+        }
+
+        #endregion
+
+        #region Event
+
+        void _storyboard_Completed(object sender, EventArgs e)
+        {
+            _IsLeftToRight = !_IsLeftToRight;
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -184,15 +197,6 @@ namespace TapIt_WP8
             _doubleAnimation.To = 0;
 
             _storyboard.Begin();
-        }
-
-        /// <summary>
-        /// orientation change 
-        /// </summary>
-        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
-        {
-            base.DeviceOrientationChanged(pageOrientation);
-            SetSizeToScreen();
         }
 
         #endregion

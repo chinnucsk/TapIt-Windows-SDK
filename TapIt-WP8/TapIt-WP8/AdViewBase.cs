@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using TapIt_WP8.Resources;
 
 namespace TapIt_WP8
 {
@@ -43,7 +44,8 @@ namespace TapIt_WP8
 
         private NavigationService _navigationService = null;
 
-        private Dictionary<string, string> _urlAdditionalParameters = new Dictionary<string,string>();
+        private Dictionary<string, string> _urlAdditionalParameters =
+                                                new Dictionary<string, string>();
 
         #endregion
 
@@ -59,7 +61,6 @@ namespace TapIt_WP8
 
         public AdViewBase()
         {
-            
         }
 
         #endregion
@@ -69,8 +70,14 @@ namespace TapIt_WP8
         public event RoutedEventHandler ControlLoaded;
         public event LoadCompletedEventHandler ContentLoaded;
 
-        public delegate void ErrorEventHandler(string strErrorMsg);
+        public delegate void ErrorEventHandler(string errorMsg);
         public event ErrorEventHandler ErrorEvent;
+
+        public delegate void InAppBrowserClosedEventHandler();
+        public event InAppBrowserClosedEventHandler InAppBrowserClosed;
+
+        public delegate void NavigatingToInAppBrowserEventHandler(string uri);
+        public event NavigatingToInAppBrowserEventHandler NavigatingToInAppBrowser;
 
         #endregion
 
@@ -94,15 +101,20 @@ namespace TapIt_WP8
         public Dictionary<string, string> UrlAdditionalParameters
         {
             get { return _urlAdditionalParameters; }
-            set { _urlAdditionalParameters = value; }
+            set
+            {
+                if (null == value)
+                    throw new ArgumentNullException();
+                _urlAdditionalParameters = value;
+            }
         }
 
-        public NavigationService NavigationService
+        public NavigationService NavigationServiceRef
         {
             set { _navigationService = value; }
         }
 
-        protected NavigationService NavigationServiceRef
+        protected NavigationService GetNavigationServiceRef
         {
             get { return _navigationService; }
         }
@@ -215,10 +227,28 @@ namespace TapIt_WP8
 
         #region Methods
 
+        public void OnInAppBrowserClosed(object obj)
+        {
+            // Make a temporary copy of the event to avoid possibility of 
+            // a race condition if the last subscriber unsubscribes 
+            // immediately after the null check and before the event is raised.
+
+            InAppBrowserPage page = (InAppBrowserPage)obj;
+
+            if (page == null)
+                return;
+
+            InAppBrowserClosedEventHandler handler = InAppBrowserClosed;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
+
         public virtual void DeviceOrientationChanged(PageOrientation pageOrientation)
         {
             DeviceDataMgr deviceData = DeviceDataMgr.Instance;
-            deviceData.PageOrientation = pageOrientation;
+            deviceData.DeviceOrientation = pageOrientation;
         }
 
         //url created using device parameters
@@ -226,6 +256,7 @@ namespace TapIt_WP8
         {
             DeviceDataMgr deviceData = DeviceDataMgr.Instance;
             deviceData.UpdateDeviceInfoWithLocation();
+
             // url creation using tapIt base url.
             string AdSrvURL = BaseURL + "?" +
                 "w=" + AdWidth +
@@ -245,16 +276,16 @@ namespace TapIt_WP8
 
             for (int i = 0; i < UrlAdditionalParameters.Count; i++)
             {
-                AdSrvURL = AdSrvURL += "&" 
-                                       + UrlAdditionalParameters.ElementAt(i).Key 
-                                       +"="
+                AdSrvURL = AdSrvURL += "&"
+                                       + UrlAdditionalParameters.ElementAt(i).Key
+                                       + "="
                                        + UrlAdditionalParameters.ElementAt(i).Value;
             }
 
 
-                // local server url. // temp code for testing purpose
-                // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=15087&format=json";
-                Debug.WriteLine("Server Url: " + AdSrvURL);
+            // local server url. // temp code for testing purpose
+            // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=15087&format=json";
+            Debug.WriteLine("Server Url: " + AdSrvURL);
 
             return AdSrvURL;
         }
@@ -268,7 +299,7 @@ namespace TapIt_WP8
                 string response = await req.HttpRequest(GetAdSrvURL());
                 if (response == null || response.Contains("error"))
                 {
-                    Exception ex = new Exception("Response contains error");
+                    Exception ex = new Exception(TapItResource.ErrorResponse);
                     throw ex;
                 }
 
@@ -291,10 +322,17 @@ namespace TapIt_WP8
         /// //The event-invoking method that derived classes can override.
         /// // The helper function to raise error event.
         ///</summary>
-        protected void OnError(string strMsg, Exception ex = null)
+        protected void OnError(string errorMsg, Exception ex = null)
         {
             IsAppActived = false;
             IsInternalLoad = false;
+
+            string errorMsgDetail = errorMsg;
+
+            if (ex != null)
+                errorMsgDetail += " Exception occured :" + ex.Message;
+
+            Debug.WriteLine("OnError(): " + errorMsgDetail);
 
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
@@ -302,18 +340,24 @@ namespace TapIt_WP8
             ErrorEventHandler handler = ErrorEvent;
             if (handler != null)
             {
-                string str = strMsg;
+                handler(errorMsgDetail);
+            }
+        }
 
-                if (ex != null)
-                    str += " Exception occured :" + ex.Message;
+        protected void OnNavigatingToInAppBrowser(string uri)
+        {
+            Debug.WriteLine("OnNavigatingToInAppBrowser(), uri: " + uri);
 
-                handler(str);
+            NavigatingToInAppBrowserEventHandler handler = NavigatingToInAppBrowser;
+            if (handler != null)
+            {
+                handler(uri);
             }
         }
 
         protected virtual void OnControlLoad(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("OnControlLoad");
+            Debug.WriteLine("OnControlLoad()");
 
             RoutedEventHandler handler = ControlLoaded;
             if (handler != null)
@@ -324,7 +368,8 @@ namespace TapIt_WP8
 
         protected virtual void OnContentLoad(object sender, NavigationEventArgs e)
         {
-            Debug.WriteLine("OnContentLoad");
+            Debug.WriteLine("OnContentLoad()");
+
             IsAdLoadedPending = false;
             IsAdLoaded = true;
             IsAdDisplayed = false;

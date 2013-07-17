@@ -70,26 +70,34 @@ namespace TapIt_WP8
 
         public string PageOrientationVal
         {
-            get { return _pageOrientationVal; }
-        }
-
-        public PageOrientation PageOrientation
-        {
-            get { return _pageOrientation; }
-            set
+            get
             {
-                _pageOrientation = value;
-
-                if (PageOrientation.LandscapeRight == value ||
-                    PageOrientation.LandscapeLeft == value)
+                PageOrientation pageOrientation = DeviceOrientation;
+                if (PageOrientation.LandscapeRight == pageOrientation ||
+                    PageOrientation.LandscapeLeft == pageOrientation)
                 {
                     _pageOrientationVal = "l";
                 }
-                else if (PageOrientation.PortraitDown == value ||
-                    PageOrientation.PortraitUp == value)
+                else if (PageOrientation.PortraitDown == pageOrientation ||
+                    PageOrientation.PortraitUp == pageOrientation)
                 {
                     _pageOrientationVal = "p";
                 }
+
+                return _pageOrientationVal;
+            }
+        }
+
+        public PageOrientation DeviceOrientation
+        {
+            get
+            {
+                _pageOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                return _pageOrientation;
+            }
+            set
+            {
+                _pageOrientation = value;
             }
         }
 
@@ -254,7 +262,7 @@ namespace TapIt_WP8
         {
             try
             {
-                PageOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                DeviceOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
 
                 // _mobileOperator = "Android"; // temp code for test purpose
                 _mobileOperator = DeviceNetworkInformation.CellularMobileOperator;

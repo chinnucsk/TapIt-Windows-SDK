@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TapIt_WP8.Resources;
 using Windows.Storage;
 
 namespace TapIt_WP8
@@ -38,8 +39,7 @@ namespace TapIt_WP8
         #endregion
 
         #region EventsDecleration
-
-        public event EventHandler<NavigatingEventArgs> Navigating;
+        
         public event EventHandler<NavigationEventArgs> Navigated;
         public event NavigationFailedEventHandler NavigationFailed;
 
@@ -121,12 +121,11 @@ namespace TapIt_WP8
         {
             //initailization of grid
             _maingrid = new Grid();
-            _maingrid.Name = TapItResource.BrowserName;
+            _maingrid.Name = TapItResource.AdControlName;
 
             //nitailization of browser control
             _webBrowser = new WebBrowser();
 
-            //_webBrowser.Name = TapItResource.BrowserName;
             _webBrowser.Width = Width;
             _webBrowser.Height = Height;
             _webBrowser.Margin = Margin;
@@ -140,7 +139,7 @@ namespace TapIt_WP8
             //events  for web control
             _webBrowser.Loaded += _webBrowser_Loaded;
             _webBrowser.LoadCompleted += _webBrowser_LoadCompleted;
-            _webBrowser.Navigating += _webBrowser_Navigating;
+            _webBrowser.Navigating +=_webBrowser_Navigating;
             _webBrowser.Navigated += _webBrowser_Navigated;
             _webBrowser.NavigationFailed += _webBrowser_NavigationFailed;
         }
@@ -173,10 +172,13 @@ namespace TapIt_WP8
         /// </summary>
         void _webBrowser_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            Debug.WriteLine("_webBrowser_NavigationFailed :" + e.Exception.Message);
+            Debug.WriteLine("_webBrowser_NavigationFailed() :" + e.Exception.Message);
 
-            if (NavigationFailed != null)
-                NavigationFailed(sender, e);
+            NavigationFailedEventHandler handler = NavigationFailed;
+            if (handler != null)
+            {
+                handler(sender, e);
+            }
         }
 
         /// <summary>
@@ -184,10 +186,13 @@ namespace TapIt_WP8
         /// </summary>
         void _webBrowser_Navigated(object sender, NavigationEventArgs e)
         {
-            Debug.WriteLine("_webBrowser_Navigated");
+            Debug.WriteLine("_webBrowser_Navigated()");
 
-            if (Navigated != null)
-                Navigated(sender, e);
+            EventHandler<NavigationEventArgs> handler = Navigated;
+            if (handler != null)
+            {
+                handler(sender, e);
+            }
         }
 
         /// <summary>
@@ -195,7 +200,7 @@ namespace TapIt_WP8
         /// </summary>
         void _webBrowser_Loaded(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("_webBrowser_Loaded");
+            Debug.WriteLine("_webBrowser_Loaded()");
 
             base.OnControlLoad(sender, e);
         }
@@ -205,43 +210,47 @@ namespace TapIt_WP8
         /// </summary>
         private void _webBrowser_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            Debug.WriteLine("_webBrowser_LoadCompleted");
+            Debug.WriteLine("_webBrowser_LoadCompleted()");
 
             base.OnContentLoad(sender, e);
         }
 
-        protected virtual void OnNavigating()
+        protected virtual void Navigating()
         {
+
         }
 
         /// <summary>
-        ///  // The event is fired when user clicks on the web browser.
+        ///  // In-App browser is launched
         /// </summary>
         void _webBrowser_Navigating(object sender, NavigatingEventArgs e)
         {
-            Debug.WriteLine("_webBrowser_Navigating");
-            OnNavigating();
+            Debug.WriteLine("_webBrowser_Navigating()");
+            
+            e.Cancel = true;
+            Navigating();
 
-            if (Navigating != null)
-                Navigating(sender, e);
-
-            if (NavigationServiceRef != null)
+            bool success = false;
+            string encodedUri = String.Empty;
+            if (GetNavigationServiceRef != null)
             {
-               string encodedUri = WebUtility.UrlEncode(e.Uri.ToString());
-               NavigationServiceRef.Navigate(new Uri(string.Format
-                            ("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?myparameter1={0}",
-                            encodedUri), UriKind.RelativeOrAbsolute));
+                InAppBrowserPage._adViewBase = this;
+                encodedUri = WebUtility.UrlEncode(e.Uri.ToString());
+                success = GetNavigationServiceRef.Navigate(new Uri(string.Format
+                             ("/TapIt-WP8;component/Resources/InAppBrowserPage.xaml?navigatingUri={0}",
+                             encodedUri), UriKind.RelativeOrAbsolute));
+            }
+                
+            if (success)
+            {
+                OnNavigatingToInAppBrowser(encodedUri);
             }
             else
             {
-                OnError(TapItResource.ErrorMsg);
+                OnError(TapItResource.NavigationErrorMsg);
             }
-            e.Cancel = true;
-            //WebBrowserTask browserTask = new WebBrowserTask();
-            //browserTask.Uri = e.Uri;
-            //browserTask.Show();
         }
-
+      
         #endregion
 
         #region Methods
@@ -263,13 +272,13 @@ namespace TapIt_WP8
             int width = 0;
             DeviceDataMgr deviceData = DeviceDataMgr.Instance;
 
-            if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
-                   PageOrientation.LandscapeLeft == deviceData.PageOrientation)
+            if (PageOrientation.LandscapeRight == deviceData.DeviceOrientation ||
+                   PageOrientation.LandscapeLeft == deviceData.DeviceOrientation)
             {
                 width = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayWidthLandscape : 0);
             }
-            else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
-                PageOrientation.PortraitUp == deviceData.PageOrientation)
+            else if (PageOrientation.PortraitDown == deviceData.DeviceOrientation ||
+                PageOrientation.PortraitUp == deviceData.DeviceOrientation)
             {
                 width = deviceData.ScreenWidth;
             }
@@ -282,15 +291,15 @@ namespace TapIt_WP8
             int height = 0;
             DeviceDataMgr deviceData = DeviceDataMgr.Instance;
 
-            if (PageOrientation.LandscapeRight == deviceData.PageOrientation ||
-                   PageOrientation.LandscapeLeft == deviceData.PageOrientation)
+            if (PageOrientation.LandscapeRight == deviceData.DeviceOrientation ||
+                   PageOrientation.LandscapeLeft == deviceData.DeviceOrientation)
             {
                 height = deviceData.ScreenWidth;
             }
-            else if (PageOrientation.PortraitDown == deviceData.PageOrientation ||
-                PageOrientation.PortraitUp == deviceData.PageOrientation)
+            else if (PageOrientation.PortraitDown == deviceData.DeviceOrientation ||
+                PageOrientation.PortraitUp == deviceData.DeviceOrientation)
             {
-                height = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayHeightPortrait : 0) - 1;
+                height = deviceData.ScreenHeight - (SystemTray.IsVisible ? SystemTrayHeightPortrait : 0) ;
             }
 
             return height;
@@ -314,13 +323,14 @@ namespace TapIt_WP8
                 if (retVal)
                 {
                     int ViewPortHeight = (int)WebBrowser.ActualHeight;
-                    retVal = JsonToHtml(GetOrientationWidth(), (ViewPortHeight > 0 ? ViewPortHeight : GetOrientationHeight()));
+                    retVal = JsonToHtml(GetOrientationWidth(),
+                            (ViewPortHeight > 0 ? ViewPortHeight : GetOrientationHeight()));
                 }
             }
             catch (Exception ex)
             {
                 if (bRaiseError)
-                    OnError("Error in Load()" + ex);
+                    OnError("Error in Load(): " + ex);
             }
 
             return retVal;
@@ -333,8 +343,9 @@ namespace TapIt_WP8
             {
                 string response = JsonResponse.Html;
                 JsonParser jsnParser = new JsonParser();
-                _htmlResponse = jsnParser.WrapToHTML(response, null, null, JsonResponse,
+                _htmlResponse = jsnParser.WrapToHTML(response, JsonResponse,
                     ViewPortWidth, ViewPortHeight);
+
                 Debug.WriteLine("html response :" + _htmlResponse);
 
                 if (!string.IsNullOrEmpty(_htmlResponse))
