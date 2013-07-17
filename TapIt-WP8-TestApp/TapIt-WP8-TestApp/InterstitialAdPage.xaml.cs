@@ -49,18 +49,26 @@ namespace TapIt_WP8_TestApp
             _interstitialAdView.ControlLoaded += _interstitialAdView_ControlLoaded;
             _interstitialAdView.ContentLoaded += interstitialAdView_LoadCompleted;
             _interstitialAdView.ErrorEvent += interstitialAdView_ErrorEvent;
-            _interstitialAdView.Navigating += interstitialAdView_navigating;
+            _interstitialAdView.NavigatingToInAppBrowser += _interstitialAdView_NavigatingEvent;
             _interstitialAdView.Navigated += interstitialAdView_navigated;
             _interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+            _interstitialAdView.InAppBrowserClosed += _interstitialAdView_InAppBrowserClosed;
         }
 
+        
+        
         #endregion
 
         #region Events
 
+        void _interstitialAdView_InAppBrowserClosed()
+        {
+            MessageBox.Show("In-App browser is closed");
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _interstitialAdView.NavigationService = this.NavigationService;
+            _interstitialAdView.NavigationServiceRef = this.NavigationService;
         }
 
         ///<summary>
@@ -106,11 +114,11 @@ namespace TapIt_WP8_TestApp
         /// <summary>
         ///  // The event is fired when user clicks on the web browser.
         /// </summary>
-        void interstitialAdView_navigating(object sender, NavigatingEventArgs e)
+        void _interstitialAdView_NavigatingEvent(string uri)
         {
-            Debug.WriteLine("interstitialAdView_navigating");
+            Debug.WriteLine("_interstitialAdView_NavigatingEvent");
+            MessageBox.Show("In-App Browser is launched");
         }
-
         ///<summary>
         /// //this event is fired when error occurs
         ///</summary>
@@ -133,12 +141,14 @@ namespace TapIt_WP8_TestApp
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             progressring.Visibility = Visibility.Visible;
-            _interstitialAdView.Load();
+            Task<bool> display = _interstitialAdView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)
         {
-            loadinterstitialAd();
+            //loadinterstitialAd();
+            _interstitialAdView.Visible = Visibility.Visible;
+            progressring.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         #endregion

@@ -44,21 +44,21 @@ namespace TapIt_WP8_TestApp
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
-            _bannerAdView.UrlAdditionalParameters["key1"] = "value1";
-            _bannerAdView.UrlAdditionalParameters["key2"] = "value2";
-            _bannerAdView.UrlAdditionalParameters["key3"] = "value3";
+            _bannerAdView.UrlAdditionalParameters["param1"] = "value1";
+            _bannerAdView.UrlAdditionalParameters["param2"] = "value2";
+            _bannerAdView.UrlAdditionalParameters["param3"] = "value3";
 
             //attached events
             _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
             _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
             _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
-            _bannerAdView.Navigating += _bannerAdView_navigating;
+            _bannerAdView.NavigatingToInAppBrowser +=_bannerAdView_NavigatingEvent;
             _bannerAdView.Navigated += _bannerAdView_navigated;
             _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
-
-           
+            _bannerAdView.InAppBrowserClosed += _bannerAdView_InAppBrowserClosed;
         }
 
+        
         #endregion
 
         #region methods
@@ -84,9 +84,14 @@ namespace TapIt_WP8_TestApp
 
         #region Events
 
+        void _bannerAdView_InAppBrowserClosed()
+        {
+            MessageBox.Show("In-App browser is closed");
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _bannerAdView.NavigationService = this.NavigationService;
+            _bannerAdView.NavigationServiceRef = this.NavigationService;
         }
 
         ///<summary>
@@ -125,9 +130,10 @@ namespace TapIt_WP8_TestApp
         /// <summary>
         ///  // The event is fired when user clicks on the web browser.
         /// </summary>
-        void _bannerAdView_navigating(object sender, NavigatingEventArgs e)
+        void _bannerAdView_NavigatingEvent(string uri)
         {
-            Debug.WriteLine("_bannerAdView_navigating");
+            Debug.WriteLine("_bannerAdView_NavigatingEvent");
+            MessageBox.Show("In-App Browser is launched");
         }
 
         ///<summary>
@@ -167,12 +173,14 @@ namespace TapIt_WP8_TestApp
             progressring.Visibility = Visibility.Visible;
             //_bannerAdView.AnimationTimeInterval = 10;
             //_bannerAdView.AnimationDuration = 4;
-            _bannerAdView.Load();
+           Task<bool> disply = _bannerAdView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)
         {
-            loadBannerAd();
+            //loadBannerAd();
+            _bannerAdView.Visible = Visibility.Visible;
+            progressring.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void PhoneApplicationPage_Unloaded_1(object sender, RoutedEventArgs e)
@@ -190,7 +198,7 @@ namespace TapIt_WP8_TestApp
 
         private void installBtn_Click(object sender, RoutedEventArgs e)
         {
-            InstallTracker tracker = InstallTracker.Instance;
+            Tracker tracker = Tracker.Instance;
             Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
         }
 

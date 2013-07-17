@@ -11,6 +11,7 @@ using TapIt_WP8;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace TapIt_WP8_TestApp
 {
@@ -41,15 +42,28 @@ namespace TapIt_WP8_TestApp
             _AdPromptView.ControlLoaded += _AdPromptView_loaded;
             _AdPromptView.ContentLoaded += _AdPromptView_LoadCompleted;
             _AdPromptView.ErrorEvent += _AdPromptView_ErrorEvent;
+            _AdPromptView.NavigatingToInAppBrowser += _AdPromptView_NavigatingEvent;
+            _AdPromptView.InAppBrowserClosed += _AdPromptView_InAppBrowserClosed;
         }
 
         #endregion
 
         #region Events
 
+        void _AdPromptView_NavigatingEvent(string uri)
+        {
+            Debug.WriteLine("_AdPromptView_NavigatingEvent");
+            MessageBox.Show("In-App Browser is launched");
+        }
+
+        void _AdPromptView_InAppBrowserClosed()
+        {
+            MessageBox.Show("In-App browser is closed");
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _AdPromptView.NavigationService = this.NavigationService;
+            _AdPromptView.NavigationServiceRef = this.NavigationService;
         }
 
         //orientation change event
@@ -86,7 +100,7 @@ namespace TapIt_WP8_TestApp
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             progressring.Visibility = Visibility.Visible;
-            _AdPromptView.Load();
+           Task<bool> display = _AdPromptView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)

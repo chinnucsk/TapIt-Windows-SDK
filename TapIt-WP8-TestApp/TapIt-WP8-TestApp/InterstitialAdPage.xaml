@@ -37,11 +37,11 @@
                 <ImageBrush Stretch="Fill" ImageSource="/images/Background.jpg"/>
             </Grid.Background>
             <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left" Margin="0,76,0,0" VerticalAlignment="Top" Click="loadBtn_Click" Width="110" Background="#FF3169E0"/>
-            <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="98,295,0,0" VerticalAlignment="Top" Width="295" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
+            <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="0,295,0,0" VerticalAlignment="Top" Width="480" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
             <Button Content="Show" Name="showBtn" Visibility="Visible" HorizontalAlignment="Left" Margin="115,76,0,0" VerticalAlignment="Top" Click="showBtn_Click" Width="107" Background="#FF3169E0"/>
             <TextBlock HorizontalAlignment="Left" Margin="113,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Interstitial Ad" VerticalAlignment="Top" Height="52" Width="285" FontSize="42" Foreground="#FF0C64AE"/>
         </Grid>
-       
+
     </Grid>
 
 </phone:PhoneApplicationPage>
