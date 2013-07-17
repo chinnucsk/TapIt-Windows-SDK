@@ -52,9 +52,10 @@ _bannerAdView.Visible = Visibility.Collapsed;
 _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
 _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded        
 _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;       
-_bannerAdView.Navigating += _bannerAdView_navigating;          
+_bannerAdView.NavigatingToInAppBrowser +=_bannerAdView_NavigatingEvent;         
 _bannerAdView.Navigated += _bannerAdView_navigated;     
 _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
+_bannerAdView.InAppBrowserClosed += _bannerAdView_InAppBrowserClosed;
 
 // handle the orientation change
 _bannerAdView.DeviceOrientationChanged(e.Orientation);
@@ -62,7 +63,7 @@ _bannerAdView.DeviceOrientationChanged(e.Orientation);
 //in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
 protected override void OnNavigatedTo(NavigationEventArgs e)
 {
-   _bannerAdView.NavigationService = this.NavigationService;
+   _bannerAdView.NavigationServiceRef = this.NavigationService;
 }
 
 ````
@@ -99,12 +100,13 @@ _interstitialAdView.Visible = Visibility.Visible;
 _interstitialAdView.Visible = Visibility.Collapsed;
 
 // add the event handlers
- _interstitialAdView.ControlLoaded += _interstitialAdView_ControlLoaded;     
- _interstitialAdView.ContentLoaded += interstitialAdView_LoadCompleted;         
- _interstitialAdView.ErrorEvent += interstitialAdView_ErrorEvent;         
- _interstitialAdView.Navigating += interstitialAdView_navigating;         
- _interstitialAdView.Navigated += interstitialAdView_navigated;       
- _interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+_interstitialAdView.ControlLoaded += _interstitialAdView_ControlLoaded;     \
+_interstitialAdView.ContentLoaded += interstitialAdView_LoadCompleted;         
+_interstitialAdView.ErrorEvent += interstitialAdView_ErrorEvent;         
+_interstitialAdView.NavigatingToInAppBrowser += _interstitialAdView_NavigatingEvent;       
+_interstitialAdView.Navigated += interstitialAdView_navigated;       
+_interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+_interstitialAdView.InAppBrowserClosed += _interstitialAdView_InAppBrowserClosed;
 
 // handle the orientation change
 _interstitialAdView.DeviceOrientationChanged(e.Orientation);
@@ -112,7 +114,7 @@ _interstitialAdView.DeviceOrientationChanged(e.Orientation);
 //in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
 protected override void OnNavigatedTo(NavigationEventArgs e)
 {
-   _interstitialAdView.NavigationService = this.NavigationService;
+   _interstitialAdView.NavigationServiceRef = this.NavigationService;
 }
 
 ````
@@ -154,6 +156,8 @@ _ AdPromptView.Visible = Visibility.Collapsed;
 _AdPromptView.ControlLoaded += _AdPromptView_loaded;      
 _AdPromptView.ContentLoaded += _AdPromptView_LoadCompleted;  
 _AdPromptView.ErrorEvent += _AdPromptView_ErrorEvent; 
+_AdPromptView.NavigatingToInAppBrowser += _AdPromptView_NavigatingEvent;
+_AdPromptView.InAppBrowserClosed += _AdPromptView_InAppBrowserClosed;
 
 // handle the orientation change
 _AdPromptView.DeviceOrientationChanged(e.Orientation);
@@ -161,7 +165,7 @@ _AdPromptView.DeviceOrientationChanged(e.Orientation);
 //in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
 protected override void OnNavigatedTo(NavigationEventArgs e)
 {
-   _AdPromptView.NavigationService = this.NavigationService;
+    _AdPromptView.NavigationServiceRef = this.NavigationService;
 }
 
 
@@ -195,4 +199,22 @@ _bannerAdView.AppDeactivated();
 _interstitialAdView.AppActivated();
 
 _interstitialAdView.AppDeactivated();
+
+Tracker
+-------
+Install Tracker - To track SDK instillation.
+
+//call for Install Tracker
+
+Tracker tracker = Tracker.Instance;
+
+Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
+
+Event Tracker - To track events.
+
+//call for Event Tracker
+
+Tracker tracker = Tracker.Instance;
+
+Task<bool> isEvent = tracker.ReportEvent("event_txt");
 
