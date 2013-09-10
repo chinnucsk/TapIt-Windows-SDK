@@ -1,7 +1,4 @@
-﻿using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using Microsoft.Phone.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,10 +7,21 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+
+#if WINDOWS_PHONE
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using TapIt_WP8.Resources;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
+#elif WIN8
+using TapIt_Win8;
+using Windows.UI.Xaml;
+using Windows.UI.Popups;
+using Windows.System;
+#endif
 
 namespace TapIt_WP8
 {
@@ -39,7 +47,13 @@ namespace TapIt_WP8
                 {
                     if (IsAdDisplayed)
                     {
-                        OnError(TapItResource.LoadNewAd);
+                        OnError(
+#if WINDOWS_PHONE
+                            TapItResource.LoadNewAd
+#elif WIN8
+ResourceStrings.LoadNewAd
+#endif
+);
                         return;
                     }
 
@@ -78,8 +92,8 @@ namespace TapIt_WP8
         #endregion
 
         #region Methods
-
-        private void ShowAdPrompt()
+#if WINDOWS_PHONE
+         private void ShowAdPrompt()
         {
             if (JsonResponse != null)
             {
@@ -133,6 +147,55 @@ namespace TapIt_WP8
                 OnError(TapItResource.NoAdPromptData);
             }
         }
+#elif WIN8
+        private async void ShowAdPrompt()
+        {
+            try
+            {
+                if (JsonResponse != null)
+                {
+                    MessageDialog messageDialog = new MessageDialog(JsonResponse.adtitle);
+
+                    messageDialog.Commands.Add(new UICommand(
+                       JsonResponse.declinestring,
+                        new UICommandInvokedHandler(this.CancleCommandInvokedHandler)));
+
+                    messageDialog.Commands.Add(new UICommand(
+                       JsonResponse.calltoaction,
+                        new UICommandInvokedHandler(this.OkCommandInvokedHandler)));
+
+                    // default command
+                    messageDialog.DefaultCommandIndex = 1;
+
+                    // escape key command
+                    messageDialog.CancelCommandIndex = 0;
+
+                    await messageDialog.ShowAsync();
+
+                    IsAdDisplayed = true;
+                }
+                else
+                {
+                    OnError(ResourceStrings.NoAdPromptData);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError(ex.Message);
+            }
+        }
+
+        private async void OkCommandInvokedHandler(IUICommand command)
+        {
+            await Launcher.LaunchUriAsync(new Uri(JsonResponse.clickUrl));
+        }
+
+        private void CancleCommandInvokedHandler(IUICommand command)
+        {
+
+        }
+#endif
+
 
         public override async Task<bool> Load(bool bRaiseError = true)
         {

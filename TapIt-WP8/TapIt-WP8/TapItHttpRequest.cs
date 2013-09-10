@@ -22,7 +22,7 @@ namespace TapIt_WP8
                 //Initializes a new WebRequest instance for the specified URI. 
                 HttpWebRequest httpWebRequest = HttpWebRequest.CreateHttp(url);
 
-                string strUA = httpWebRequest.UserAgent;
+                //string strUA = httpWebRequest.UserAgent;
 
                 //Begins and end an asynchronous request to an Internet resource
                 var response = (HttpWebResponse)(await Task<WebResponse>.Factory.FromAsync(httpWebRequest.BeginGetResponse, httpWebRequest.EndGetResponse, null));

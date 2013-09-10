@@ -1,15 +1,23 @@
-﻿using Microsoft.Phone.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+
+#if WINDOWS_PHONE
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
+using Microsoft.Phone.Controls;
+#elif WIN8
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+#endif
+
 
 namespace TapIt_WP8
 {
@@ -18,7 +26,11 @@ namespace TapIt_WP8
         #region Constants
 
         //Banner ad size
-        public const int _bannerHeight = 80, _bannerWidtht = 320;
+#if WINDOWS_PHONE
+           public const int _bannerHeight = 80, _bannerWidtht = 320;
+#elif WIN8
+        public const int _bannerHeight = 90, _bannerWidtht = 728;
+#endif
 
         #endregion
 
@@ -90,7 +102,9 @@ namespace TapIt_WP8
         {
             SetAdType();
             SetAdSize(_bannerHeight, _bannerWidtht);
+#if WINDOWS_PHONE
             RotateBannerAd();
+#endif
         }
 
         #endregion
@@ -115,7 +129,8 @@ namespace TapIt_WP8
             SetSizeToScreen();
         }
 
-        /// <summary>
+#if WINDOWS_PHONE
+         /// <summary>
         /// animation for banner ad
         /// </summary>
         private void RotateBannerAd()
@@ -131,6 +146,16 @@ namespace TapIt_WP8
             _storyboard.Completed += _storyboard_Completed;
             _animationTimer.Start();
         }
+
+        /// <summary>
+        /// orientation change 
+        /// </summary>
+        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
+        {
+            base.DeviceOrientationChanged(pageOrientation);
+            SetSizeToScreen();
+        }
+#endif
 
         public override async Task<bool> Load(bool bRaiseError = true)
         {
@@ -158,15 +183,6 @@ namespace TapIt_WP8
             }
 
             return retVal;
-        }
-      
-        /// <summary>
-        /// orientation change 
-        /// </summary>
-        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
-        {
-            base.DeviceOrientationChanged(pageOrientation);
-            SetSizeToScreen();
         }
 
         #endregion

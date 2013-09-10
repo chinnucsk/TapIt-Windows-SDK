@@ -1,21 +1,31 @@
-﻿using Microsoft.Phone.Controls;
-using Microsoft.Phone.Info;
-using Microsoft.Phone.Net.NetworkInformation;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Device.Location;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
+using Windows.Networking.Connectivity;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Graphics.Display;
+
+#if WINDOWS_PHONE
 using System.Windows.Threading;
-using Windows.Networking.Connectivity;
+using System.Net.Sockets;
+using System.Device.Location;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Info;
+using Microsoft.Phone.Net.NetworkInformation;
+
+#elif WIN8
+using Windows.UI.Xaml.Controls;
+using Windows.Security.ExchangeActiveSyncProvisioning;
+using Windows.UI.Xaml;
+using Windows.Devices.Geolocation;
+#endif
 
 namespace TapIt_WP8
 {
@@ -38,7 +48,13 @@ namespace TapIt_WP8
         int _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
         private static DeviceDataMgr _instance;
         Version _version;
-        PageOrientation _pageOrientation = PageOrientation.None;
+        #if WINDOWS_PHONE
+
+        PageOrientation _pageOrientation = PageOrientation.None; 
+#elif WIN8
+        DisplayOrientations _pageOrientation = DisplayOrientations.None;
+#endif
+ 
         string _pageOrientationVal = "p";
 
         #endregion
@@ -72,7 +88,8 @@ namespace TapIt_WP8
         {
             get
             {
-                PageOrientation pageOrientation = DeviceOrientation;
+#if WINDOWS_PHONE
+                 PageOrientation pageOrientation = DeviceOrientation;
                 if (PageOrientation.LandscapeRight == pageOrientation ||
                     PageOrientation.LandscapeLeft == pageOrientation)
                 {
@@ -83,12 +100,28 @@ namespace TapIt_WP8
                 {
                     _pageOrientationVal = "p";
                 }
+#elif WIN8
+                DisplayOrientations pageOrientation = DeviceOrientation;
+
+                if (DisplayOrientations.Landscape == pageOrientation ||
+                   DisplayOrientations.LandscapeFlipped == pageOrientation)
+                {
+                    _pageOrientationVal = "l";
+                }
+                else if (DisplayOrientations.Portrait == pageOrientation ||
+                    DisplayOrientations.PortraitFlipped == pageOrientation)
+                {
+                    _pageOrientationVal = "p";
+                }
+#endif
 
                 return _pageOrientationVal;
             }
         }
 
-        public PageOrientation DeviceOrientation
+
+        #if WINDOWS_PHONE
+         public PageOrientation DeviceOrientation
         {
             get
             {
@@ -100,6 +133,21 @@ namespace TapIt_WP8
                 _pageOrientation = value;
             }
         }
+#elif WIN8
+        public DisplayOrientations DeviceOrientation
+        {
+            get
+            {
+                _pageOrientation = DisplayProperties.CurrentOrientation;
+                return _pageOrientation;
+            }
+            set
+            {
+                _pageOrientation = value;
+            }
+        }
+#endif
+
 
         public string OsVersion
         {
@@ -172,7 +220,9 @@ namespace TapIt_WP8
 
         private DeviceDataMgr()
         {
-            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
+#if WINDOWS_PHONE
+      NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
+#endif
             UpdateDeviceStaticData();
             UpdateDeviceInfo();
         }
@@ -197,18 +247,19 @@ namespace TapIt_WP8
                 "</body> " +
                 "</html> ";
 
+#if WINDOWS_PHONE
             WebBrowser webBrowser = new WebBrowser();
             webBrowser.IsScriptEnabled = true;
+#elif WIN8
+            WebView webBrowser = new WebView();
+            webBrowser.AllowedScriptNotifyUris = WebView.AnyScriptNotifyUri;
+#endif
             webBrowser.ScriptNotify += webBrowser_ScriptNotify;
             webBrowser.NavigateToString(uaHtml);
         }
 
-        private void webBrowser_ScriptNotify(object sender, NotifyEventArgs e)
-        {
-            _userAgent = e.Value;
-        }
-
-        ///<summary>
+#if WINDOWS_PHONE
+         ///<summary>
         ///get the changed network data
         ///</summary>
         private void OnNetworkChanged(object sender, EventArgs e)
@@ -223,11 +274,17 @@ namespace TapIt_WP8
                 throw ex;
             }
         }
+#endif
 
-        public void UpdateDeviceInfoWithLocation()
+        private void webBrowser_ScriptNotify(object sender, NotifyEventArgs e)
+        {
+            _userAgent = e.Value;
+        }
+
+        public async Task<bool> UpdateDeviceInfoWithLocation()
         {
             UpdateDeviceInfo();
-            UpateLocation();
+            return await UpateLocation();
         }
 
         public void UpdateDeviceStaticData()
@@ -235,7 +292,8 @@ namespace TapIt_WP8
             try
             {
                 GetUserAgent();
-                _version = Environment.OSVersion.Version;
+#if WINDOWS_PHONE
+                 _version = Environment.OSVersion.Version;
                 _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
 
                 _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
@@ -247,6 +305,18 @@ namespace TapIt_WP8
                     byte[] byteID = (byte[])uniqueID;
                     _deviceID = Convert.ToBase64String(byteID);
                 }
+#elif WIN8
+                _version = new Version(6, 2);
+                _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
+
+                Windows.Foundation.Rect rect = Window.Current.Bounds;
+                _screenWidth = Convert.ToInt32(rect.Width);
+                _screenHeight = Convert.ToInt32(rect.Height);
+
+                var profiles = NetworkInformation.GetConnectionProfiles();
+                var adapter = profiles[0].NetworkAdapter;
+                _deviceID = adapter.NetworkAdapterId.ToString();
+#endif
             }
             catch (Exception ex)
             {
@@ -262,6 +332,7 @@ namespace TapIt_WP8
         {
             try
             {
+#if WINDOWS_PHONE
                 DeviceOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
 
                 // _mobileOperator = "Android"; // temp code for test purpose
@@ -292,7 +363,25 @@ namespace TapIt_WP8
 
                 _isCellularDataEnabled = DeviceNetworkInformation.IsCellularDataEnabled;
                 _isNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable;
-
+#elif WIN8
+                DeviceOrientation = DisplayProperties.CurrentOrientation;
+                
+                ConnectionProfile profile = NetworkInformation.GetInternetConnectionProfile();
+                if (profile != null)
+                {
+                    var interfaceType = profile.NetworkAdapter.IanaInterfaceType;
+                    switch (interfaceType)
+                    {
+                        case 71: // "WiFi";
+                        case 6:  // "Ethernet";
+                            _connectionSpd = Convert.ToInt32(ConnectionSpeed.High_Speed);
+                            break;
+                        default:
+                            _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
+                            break;
+                    }
+                }
+#endif
                 //_language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
                 _language = CultureInfo.CurrentCulture.ToString();
             }
@@ -306,9 +395,10 @@ namespace TapIt_WP8
         ///<summary>
         ///get device location(latitude,longitude)
         ///</summary>
-        public bool UpateLocation()
+        public async Task<bool> UpateLocation()
         {
             bool bRet = false;
+#if WINDOWS_PHONE
             GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();
             // Do not suppress prompt, and wait 1000 milliseconds to start.
             watcher.TryStart(false, TimeSpan.FromMilliseconds(1000));
@@ -319,7 +409,17 @@ namespace TapIt_WP8
                 _longitude = coord.Longitude;
                 bRet = true;
             }
-
+#elif WIN8
+            Geolocator geolocator = new Geolocator();
+            //geolocator.PositionChanged += geolocator_PositionChanged;
+            if (geolocator.LocationStatus != PositionStatus.Disabled)
+            {
+                Geoposition pos = await geolocator.GetGeopositionAsync();
+                _latitude = pos.Coordinate.Latitude;
+                _longitude = pos.Coordinate.Longitude;
+                bRet = true;
+            }
+#endif
             return bRet;
         }
 
