@@ -1,6 +1,6 @@
 TapIt Windows Phone SDK
 =======================
-Version 0.9 Beta
+Version 1.0.0
 
 This is the WP8 SDK for the TapIt! mobile ad network. Go to http://tapit.com/ for more details and to sign up.
 
@@ -52,12 +52,19 @@ _bannerAdView.Visible = Visibility.Collapsed;
 _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
 _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded        
 _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;       
-_bannerAdView.Navigating += _bannerAdView_navigating;          
+_bannerAdView.NavigatingToInAppBrowser +=_bannerAdView_NavigatingEvent;         
 _bannerAdView.Navigated += _bannerAdView_navigated;     
 _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
+_bannerAdView.InAppBrowserClosed += _bannerAdView_InAppBrowserClosed;
 
 // handle the orientation change
 _bannerAdView.DeviceOrientationChanged(e.Orientation);
+
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+   _bannerAdView.NavigationServiceRef = this.NavigationService;
+}
 
 ````
 For complete example, please refer
@@ -93,15 +100,22 @@ _interstitialAdView.Visible = Visibility.Visible;
 _interstitialAdView.Visible = Visibility.Collapsed;
 
 // add the event handlers
- _interstitialAdView.ControlLoaded += _interstitialAdView_ControlLoaded;     
- _interstitialAdView.ContentLoaded += interstitialAdView_LoadCompleted;         
- _interstitialAdView.ErrorEvent += interstitialAdView_ErrorEvent;         
- _interstitialAdView.Navigating += interstitialAdView_navigating;         
- _interstitialAdView.Navigated += interstitialAdView_navigated;       
- _interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+_interstitialAdView.ControlLoaded += _interstitialAdView_ControlLoaded;     \
+_interstitialAdView.ContentLoaded += interstitialAdView_LoadCompleted;         
+_interstitialAdView.ErrorEvent += interstitialAdView_ErrorEvent;         
+_interstitialAdView.NavigatingToInAppBrowser += _interstitialAdView_NavigatingEvent;       
+_interstitialAdView.Navigated += interstitialAdView_navigated;       
+_interstitialAdView.NavigationFailed += interstitialAdView_navigationFailed;
+_interstitialAdView.InAppBrowserClosed += _interstitialAdView_InAppBrowserClosed;
 
 // handle the orientation change
 _interstitialAdView.DeviceOrientationChanged(e.Orientation);
+
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+   _interstitialAdView.NavigationServiceRef = this.NavigationService;
+}
 
 ````
 For complete example, please refer 
@@ -142,13 +156,17 @@ _ AdPromptView.Visible = Visibility.Collapsed;
 _AdPromptView.ControlLoaded += _AdPromptView_loaded;      
 _AdPromptView.ContentLoaded += _AdPromptView_LoadCompleted;  
 _AdPromptView.ErrorEvent += _AdPromptView_ErrorEvent; 
+_AdPromptView.NavigatingToInAppBrowser += _AdPromptView_NavigatingEvent;
+_AdPromptView.InAppBrowserClosed += _AdPromptView_InAppBrowserClosed;
 
 // handle the orientation change
 _AdPromptView.DeviceOrientationChanged(e.Orientation);
 
-// Handle the back key press event to remove the Adprompt.
-// On back key press event call following method.
-_AdPromptView.OnBackKeypressed(e);
+//in your page override OnNavigatedTo(NavigationEventArgs e) event and set NavigationService property.
+protected override void OnNavigatedTo(NavigationEventArgs e)
+{
+    _AdPromptView.NavigationServiceRef = this.NavigationService;
+}
 
 
 ````
@@ -157,6 +175,16 @@ https://github.com/tapit/TapIt-Windows-SDK/blob/master/TapIt-WP8-TestApp/TapIt-W
 
 State management
 -------------------
+
+The Windows Phone execution model allows only one app to run in the foreground at a time.
+when the user switches away from an app, it is either suspended or terminated,
+depending on the context and the way that the user navigated away.
+The Windows Phone application model provides a set of events and related APIs that allow your 
+app to handle activation and deactivation in a way that provides a consistent and intuitive user experience.
+
+In the SDK the AdView contents are lost when the application gets deactivated.so on App activation
+The contents need to be restored.
+
 
 // handle the App activation / deactivation
 
@@ -171,4 +199,22 @@ _bannerAdView.AppDeactivated();
 _interstitialAdView.AppActivated();
 
 _interstitialAdView.AppDeactivated();
+
+Tracker
+-------
+Install Tracker - To track SDK instillation.
+
+//call for Install Tracker
+
+Tracker tracker = Tracker.Instance;
+
+Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
+
+Event Tracker - To track events.
+
+//call for Event Tracker
+
+Tracker tracker = Tracker.Instance;
+
+Task<bool> isEvent = tracker.ReportEvent("event_txt");
 
