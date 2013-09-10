@@ -126,8 +126,6 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="ImagesFolder\back-arrow.png" />
     <Content Include="ImagesFolder\Background.jpg" />
-    <Content Include="ImagesFolder\Big_GREEN_Button[1].png" />
-    <Content Include="ImagesFolder\imagesCA5QXGC8.jpg" />
     <Content Include="ImagesFolder\TapItLogo.png" />
     <Content Include="ImagesFolder\TapIt-title.png" />
     <Content Include="ImagesFolder\TitleBackground.png" />
