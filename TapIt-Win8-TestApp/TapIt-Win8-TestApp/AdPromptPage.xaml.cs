@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TapIt_Win8;
-using TapIt_WP8;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -18,7 +17,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace TapIt_W8_TestApp
+namespace TapIt_Win8_TestApp
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -37,7 +36,7 @@ namespace TapIt_W8_TestApp
         {
             this.InitializeComponent();
 
-          
+
             //initialize view
             _AdPromptView = new AdPromptView();
 

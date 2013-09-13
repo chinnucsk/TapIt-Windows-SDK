@@ -18,6 +18,9 @@
       <VisualElements DisplayName="TapIt-Win8-TestApp" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="TapIt-Win8-TestApp" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
+        <InitialRotationPreference>
+          <Rotation Preference="portrait" />
+        </InitialRotationPreference>
       </VisualElements>
     </Application>
   </Applications>

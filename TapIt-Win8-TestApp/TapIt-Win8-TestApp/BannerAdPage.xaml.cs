@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TapIt_Win8;
-using TapIt_WP8;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -19,9 +18,9 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace TapIt_W8_TestApp
+namespace TapIt_Win8_TestApp
 {
-     
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -47,28 +46,36 @@ namespace TapIt_W8_TestApp
             //(Application.Current as TapIt_W8_TestApp.App).App_Activated +=
             //              new EventHandler(BannerAdPage_AppActivated);
 
-               //Initialize the view
-              _bannerAdView = new BannerAdView();
-             
-              //_bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-              //_bannerAdView.ZoneId = 14702;                  //zone id for local server
-              _bannerAdView.ZoneId = 29318;
-              _bannerAdView.Visible = Visibility.Collapsed;
-              _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
+            //Initialize the view
+            _bannerAdView = new BannerAdView();
 
-              ContentPanel.Children.Add(_bannerAdView.ViewControl);
+            //_bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
+            //_bannerAdView.ZoneId = 14702;                  //zone id for local server
+            _bannerAdView.ZoneId = 29318;
+            _bannerAdView.Visible = Visibility.Collapsed;
+            _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
 
+            ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
+            //_bannerAdView.UrlAdditionalParameters["param1"] = "value1";
+            //_bannerAdView.UrlAdditionalParameters["param2"] = "value2";
+            //_bannerAdView.UrlAdditionalParameters["param3"] = "value3";
 
-              _bannerAdView.UrlAdditionalParameters["param1"] = "value1";
-              _bannerAdView.UrlAdditionalParameters["param2"] = "value2";
-              _bannerAdView.UrlAdditionalParameters["param3"] = "value3";
+            //attached events
+            _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
+            _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
+            _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
+            _bannerAdView.NavigationFailed += _bannerAdView_NavigationFailed;
+            //_bannerAdView.SetAdSize(728, 90);
+            _bannerAdView.SetAdSize(300, 250);
+            //_bannerAdView.SetAdSize(320, 50);
 
-              //attached events
-              _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
-              _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
-              _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
-              _bannerAdView.NavigationFailed += _bannerAdView_NavigationFailed;
+            ContentPanel.SizeChanged += ContentPanel_SizeChanged;
+        }
+
+        void ContentPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
 
         #endregion
@@ -91,7 +98,7 @@ namespace TapIt_W8_TestApp
 
         private void OkCommandInvokedHandler(IUICommand command)
         {
- 
+
         }
 
         #endregion

@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace TapIt_W8_TestApp
+namespace TapIt_Win8_TestApp
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -96,6 +96,11 @@ namespace TapIt_W8_TestApp
         private void OkCommandInvokedHandler(IUICommand command)
         {
 
+        }
+
+        private void interstitialAdBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(InterstitialAdPage));
         }
 
     }
