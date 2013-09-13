@@ -7,7 +7,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+#if WINDOWS_PHONE
 namespace TapIt_WP8
+#elif WIN8
+namespace TapIt_Win8
+#endif
 {
     public class TapItHttpRequest
     {

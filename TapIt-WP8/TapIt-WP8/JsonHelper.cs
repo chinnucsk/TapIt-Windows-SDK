@@ -8,7 +8,11 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
+#if WINDOWS_PHONE
 namespace TapIt_WP8
+#elif WIN8
+namespace TapIt_Win8
+#endif
 {
     [DataContract]
     public class JsonDataContract
@@ -64,7 +68,7 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in ParseJson() :" + ex.Message);
-                throw ex;
+                throw;
             }
 
             return jsonHlpr;

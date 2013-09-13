@@ -70,7 +70,7 @@ namespace TapIt_WP8
                 string fileData = sr.ReadToEnd();
                 sr.Close();
 
-                if (!string.IsNullOrEmpty(fileData) && 
+                if (!string.IsNullOrEmpty(fileData) &&
                     fileData == TapItResource.SuccessMesg)
                 {
                     Debug.WriteLine(TapItResource.TrackerMesg);

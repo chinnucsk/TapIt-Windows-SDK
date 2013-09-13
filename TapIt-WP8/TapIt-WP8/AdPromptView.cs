@@ -17,13 +17,16 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 #elif WIN8
-using TapIt_Win8;
 using Windows.UI.Xaml;
 using Windows.UI.Popups;
 using Windows.System;
 #endif
 
+#if WINDOWS_PHONE
 namespace TapIt_WP8
+#elif WIN8
+namespace TapIt_Win8
+#endif
 {
     public class AdPromptView : AdViewBase
     {
@@ -37,6 +40,14 @@ namespace TapIt_WP8
 
         #region Property
 
+        protected override AdType Adtype
+        {
+            get
+            {
+                return AdType.Ad_Prompt;
+            }
+        }
+
         //Show the AdPrompt
         public override Visibility Visible
         {
@@ -49,7 +60,7 @@ namespace TapIt_WP8
                     {
                         OnError(
 #if WINDOWS_PHONE
-                            TapItResource.LoadNewAd
+TapItResource.LoadNewAd
 #elif WIN8
 ResourceStrings.LoadNewAd
 #endif
@@ -79,12 +90,7 @@ ResourceStrings.LoadNewAd
 
         #region Abstract methods
 
-        protected override void SetAdType()
-        {
-            Adtype = AdType.Ad_Prompt;
-        }
-
-        protected override void SetAdSize(int height, int width)
+        protected void SetAdSize(int height, int width)
         {
             // No code here 
         }
@@ -93,7 +99,7 @@ ResourceStrings.LoadNewAd
 
         #region Methods
 #if WINDOWS_PHONE
-         private void ShowAdPrompt()
+        private void ShowAdPrompt()
         {
             if (JsonResponse != null)
             {

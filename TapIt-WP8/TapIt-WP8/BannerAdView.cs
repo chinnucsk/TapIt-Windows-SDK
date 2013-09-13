@@ -19,7 +19,11 @@ using Windows.UI.Xaml.Media.Animation;
 #endif
 
 
+#if WINDOWS_PHONE
 namespace TapIt_WP8
+#elif WIN8
+namespace TapIt_Win8
+#endif
 {
     public class BannerAdView : AdView
     {
@@ -27,9 +31,9 @@ namespace TapIt_WP8
 
         //Banner ad size
 #if WINDOWS_PHONE
-           public const int _bannerHeight = 80, _bannerWidtht = 320;
+        public const int _bannerHeight = 80, _bannerWidth = 320;
 #elif WIN8
-        public const int _bannerHeight = 90, _bannerWidtht = 728;
+        public const int _bannerHeight = 90, _bannerWidth = 728;
 #endif
 
         #endregion
@@ -48,6 +52,14 @@ namespace TapIt_WP8
         #endregion
 
         #region Property
+
+        protected override AdType Adtype
+        {
+            get
+            {
+                return AdType.Banner_Ad;
+            }
+        }
 
         public override int Width
         {
@@ -100,11 +112,11 @@ namespace TapIt_WP8
 
         public BannerAdView()
         {
-            SetAdType();
-            SetAdSize(_bannerHeight, _bannerWidtht);
+            SetAdSize(_bannerWidth, _bannerHeight);
 #if WINDOWS_PHONE
             RotateBannerAd();
 #endif
+
         }
 
         #endregion
@@ -112,25 +124,24 @@ namespace TapIt_WP8
         #region methods
 
         /// <summary>
-        /// set the banner ad type
+        /// set size for ad - to support multiple sizes for banner ad
         /// </summary>
-        protected override void SetAdType()
-        {
-            Adtype = AdType.Banner_Ad;
-        }
-
-        /// <summary>
-        /// set size for ad
-        /// </summary>
-        protected override void SetAdSize(int height, int width)
+        public void SetAdSize(int width, int height)
         {
             AdHeight = height;
             AdWidth = width;
             SetSizeToScreen();
+
+            SetControlHeight(height);
+        }
+
+        private void SetControlHeight(int height)
+        {
+            Height = height + 2;
         }
 
 #if WINDOWS_PHONE
-         /// <summary>
+        /// <summary>
         /// animation for banner ad
         /// </summary>
         private void RotateBannerAd()

@@ -27,7 +27,11 @@ using Windows.UI.Xaml;
 using Windows.Devices.Geolocation;
 #endif
 
+#if WINDOWS_PHONE
 namespace TapIt_WP8
+#elif WIN8
+namespace TapIt_Win8
+#endif
 {
     class DeviceDataMgr
     {
@@ -48,13 +52,13 @@ namespace TapIt_WP8
         int _connectionSpd = Convert.ToInt32(ConnectionSpeed.Unknown);
         private static DeviceDataMgr _instance;
         Version _version;
-        #if WINDOWS_PHONE
+#if WINDOWS_PHONE
 
-        PageOrientation _pageOrientation = PageOrientation.None; 
+        PageOrientation _pageOrientation = PageOrientation.None;
 #elif WIN8
         DisplayOrientations _pageOrientation = DisplayOrientations.None;
 #endif
- 
+
         string _pageOrientationVal = "p";
 
         #endregion
@@ -89,7 +93,7 @@ namespace TapIt_WP8
             get
             {
 #if WINDOWS_PHONE
-                 PageOrientation pageOrientation = DeviceOrientation;
+                PageOrientation pageOrientation = DeviceOrientation;
                 if (PageOrientation.LandscapeRight == pageOrientation ||
                     PageOrientation.LandscapeLeft == pageOrientation)
                 {
@@ -120,8 +124,8 @@ namespace TapIt_WP8
         }
 
 
-        #if WINDOWS_PHONE
-         public PageOrientation DeviceOrientation
+#if WINDOWS_PHONE
+        public PageOrientation DeviceOrientation
         {
             get
             {
@@ -191,12 +195,28 @@ namespace TapIt_WP8
 
         public int ScreenHeight
         {
-            get { return _screenHeight; }
+            get
+            {
+#if WINDOWS_PHONE
+                return _screenHeight;
+#elif WIN8
+                Windows.Foundation.Rect rect = Window.Current.Bounds;
+                return _screenHeight = Convert.ToInt32(rect.Height);
+#endif
+            }
         }
 
         public int ScreenWidth
         {
-            get { return _screenWidth; }
+            get
+            {
+#if WINDOWS_PHONE
+                return _screenWidth;
+#elif WIN8
+                Windows.Foundation.Rect rect = Window.Current.Bounds;
+                return _screenWidth = Convert.ToInt32(rect.Width);
+#endif
+            }
         }
 
         public string MobileOperator
@@ -221,7 +241,7 @@ namespace TapIt_WP8
         private DeviceDataMgr()
         {
 #if WINDOWS_PHONE
-      NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
+            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(OnNetworkChanged);
 #endif
             UpdateDeviceStaticData();
             UpdateDeviceInfo();
@@ -259,7 +279,7 @@ namespace TapIt_WP8
         }
 
 #if WINDOWS_PHONE
-         ///<summary>
+        ///<summary>
         ///get the changed network data
         ///</summary>
         private void OnNetworkChanged(object sender, EventArgs e)
@@ -271,7 +291,7 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in OnNetworkChanged() :" + ex.Message);
-                throw ex;
+                throw;
             }
         }
 #endif
@@ -293,7 +313,7 @@ namespace TapIt_WP8
             {
                 GetUserAgent();
 #if WINDOWS_PHONE
-                 _version = Environment.OSVersion.Version;
+                _version = Environment.OSVersion.Version;
                 _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
 
                 _screenWidth = Convert.ToInt32(Application.Current.Host.Content.ActualWidth);
@@ -309,9 +329,10 @@ namespace TapIt_WP8
                 _version = new Version(6, 2);
                 _osVersion = _version.Major.ToString() + "." + _version.Minor.ToString();
 
-                Windows.Foundation.Rect rect = Window.Current.Bounds;
-                _screenWidth = Convert.ToInt32(rect.Width);
-                _screenHeight = Convert.ToInt32(rect.Height);
+                // width and height depends on the orientation so read them as and when required
+                //Windows.Foundation.Rect rect = Window.Current.Bounds;
+                //_screenWidth = Convert.ToInt32(rect.Width);
+                //_screenHeight = Convert.ToInt32(rect.Height);
 
                 var profiles = NetworkInformation.GetConnectionProfiles();
                 var adapter = profiles[0].NetworkAdapter;
@@ -321,7 +342,7 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in GetdeviceInfo() :" + ex.Message);
-                throw ex;
+                throw;
             }
         }
 
@@ -365,7 +386,7 @@ namespace TapIt_WP8
                 _isNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable;
 #elif WIN8
                 DeviceOrientation = DisplayProperties.CurrentOrientation;
-                
+
                 ConnectionProfile profile = NetworkInformation.GetInternetConnectionProfile();
                 if (profile != null)
                 {
@@ -388,7 +409,7 @@ namespace TapIt_WP8
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception in GetdeviceInfo() :" + ex.Message);
-                throw ex;
+                throw;
             }
         }
 

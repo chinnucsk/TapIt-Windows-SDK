@@ -35,11 +35,8 @@ namespace TapIt_Win8
     public class InterstitialAdView : AdView
     {
         #region constants
-#if WINDOWS_PHONE
-        public const int _intestitialAdHeight = 480, _intestitialAdWidth = 320;
-#elif WIN8
+
         public const int _intestitialAdHeight = 1024, _intestitialAdWidth = 728;
-#endif
 
         #endregion
 
@@ -142,47 +139,32 @@ namespace TapIt_Win8
             return retVal;
         }
 
-#if WINDOWS_PHONE
+        //protected override void Navigating()
+        //{
+        //    ViewControl.Visibility = Visibility.Collapsed;
+        //}
 
-        protected override void Navigating()
-        {
-            ViewControl.Visibility = Visibility.Collapsed;
-        }
-
-        /// <summary>
-        /// animation for banner ad
-        /// </summary>
-        private void RotateInterstitialAd()
-        {
-            Storyboard _storyBourd = new Storyboard();
-            DoubleAnimation _doubleAnimation = new DoubleAnimation();
-            _doubleAnimation.From = 90;
-            _doubleAnimation.To = 0;
-            PlaneProjection projection1 = new PlaneProjection();
-            Maingrid.Projection = projection1;
-            _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(1.25));
-            Storyboard.SetTarget(_doubleAnimation, Maingrid.Projection);
-            Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationXProperty));
-            _storyBourd.Children.Add(_doubleAnimation);
-            _storyBourd.Seek(TimeSpan.FromSeconds(0.5));
-            _storyBourd.Begin();
-        }
-
-#endif
+        /////// <summary>
+        /////// animation for banner ad
+        /////// </summary>
+        ////private void RotateInterstitialAd()
+        ////{
+        ////    Storyboard _storyBourd = new Storyboard();
+        ////    DoubleAnimation _doubleAnimation = new DoubleAnimation();
+        ////    _doubleAnimation.From = 90;
+        ////    _doubleAnimation.To = 0;
+        ////    PlaneProjection projection1 = new PlaneProjection();
+        ////    Maingrid.Projection = projection1;
+        ////    _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(1.25));
+        ////    Storyboard.SetTarget(_doubleAnimation, Maingrid.Projection);
+        ////    Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationXProperty));
+        ////    _storyBourd.Children.Add(_doubleAnimation);
+        ////    _storyBourd.Seek(TimeSpan.FromSeconds(0.5));
+        ////    _storyBourd.Begin();
+        ////}
 
         private void AddCloseButton()
         {
-            _closeBtn = new Image();
-            _closeBtn.VerticalAlignment = VerticalAlignment.Top;
-            _closeBtn.HorizontalAlignment = HorizontalAlignment.Left;
-            _closeBtn.Stretch = Stretch.None;
-
-            Maingrid.Children.Add(_closeBtn);
-
-#if WINDOWS_PHONE
-            _closeBtn.Tap += _closeBtn_Tap;
-            _closeBtn.Source = new BitmapImage(new Uri("/Images/interstitial_close_button@2x.png", UriKind.RelativeOrAbsolute));
-#elif WIN8
             RowDefinition r1 = new RowDefinition();
             r1.Height = new GridLength(10, GridUnitType.Star);
             Maingrid.RowDefinitions.Add(r1);
@@ -190,27 +172,44 @@ namespace TapIt_Win8
             r2.Height = new GridLength(90, GridUnitType.Star);
             Maingrid.RowDefinitions.Add(r2);
 
-            _closeBtn.SetValue(Grid.RowProperty, 0);
-            WebBrowser.SetValue(Grid.RowProperty, 1);
-
-            _closeBtn.Tapped += _closeBtn_Tapped;
-            _closeBtn.Source = new BitmapImage(new Uri("ms-appx:///TapIt-Win8/Images/interstitial_close_button@2x.png", UriKind.Absolute));
-
-            Maingrid.Background = new SolidColorBrush(Colors.Black);
-#endif
-        }
+            _closeBtn = new Image();
 
 #if WINDOWS_PHONE
-        public override void DeviceOrientationChanged(PageOrientation pageOrientation)
-        {
-            base.DeviceOrientationChanged(pageOrientation);
-            SetSizeToScreen(true);
-        }
+            _closeBtn.Tap += _closeBtn_Tap;
+            //for phone
+            _closeBtn.Source = new BitmapImage(new Uri("/Images/interstitial_close_button@2x.png", UriKind.RelativeOrAbsolute));
+
+#elif WIN8
+            _closeBtn.Tapped += _closeBtn_Tapped;
+            _closeBtn.Source = new BitmapImage(new Uri("ms-appx:///TapIt-Win8/Images/interstitial_close_button@2x.png", UriKind.Absolute));
 #endif
+            _closeBtn.VerticalAlignment = VerticalAlignment.Top;
+            _closeBtn.HorizontalAlignment = HorizontalAlignment.Left;
+
+            Maingrid.Children.Add(_closeBtn);
+            _closeBtn.SetValue(Grid.RowProperty, 0);
+
+            WebBrowser.SetValue(Grid.RowProperty, 1);
+            Maingrid.Background = new SolidColorBrush(Colors.Black);
+        }
+
+
+
+
+        //public override void DeviceOrientationChanged(PageOrientation pageOrientation)
+        //{
+        //    base.DeviceOrientationChanged(pageOrientation);
+        //    SetSizeToScreen(true);
+        //}
 
         #endregion
 
         #region Events
+
+        //void _closeBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Visible = Visibility.Collapsed;
+        //}
 
 #if WINDOWS_PHONE
         void _closeBtn_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -223,6 +222,8 @@ namespace TapIt_Win8
             Visible = Visibility.Collapsed;
         }
 #endif
+
+
 
         protected override void OnContentLoad(object sender, NavigationEventArgs e)
         {

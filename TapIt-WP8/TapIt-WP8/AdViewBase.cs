@@ -15,7 +15,6 @@ using TapIt_WP8.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using Windows.Graphics.Display;
-using TapIt_WP8;
 #endif
 
 #if WINDOWS_PHONE
@@ -38,11 +37,11 @@ namespace TapIt_Win8
 
         protected Visibility _visible = Visibility.Collapsed;
 
-        private AdType _adtype = AdType.Unknown;
+        protected AdType _adtype = AdType.Unknown;
         private int _zoneId = -1;
 #if WINDOWS_PHONE
-        private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        //private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
+        //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
+        private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
         private string _format = TapItResource.Format;
         private string _sdkversion = TapItResource.SdkVersion;
 #elif WIN8
@@ -65,14 +64,6 @@ namespace TapIt_Win8
 #endif
         private Dictionary<string, string> _urlAdditionalParameters =
                                                 new Dictionary<string, string>();
-
-        #endregion
-
-        #region abstract Methods
-
-        abstract protected void SetAdType();
-
-        abstract protected void SetAdSize(int height, int width);
 
         #endregion
 
@@ -210,10 +201,9 @@ namespace TapIt_Win8
             set { _baseURL = value; }
         }
 
-        protected AdType Adtype
+        protected abstract AdType Adtype
         {
-            get { return _adtype; }
-            set { _adtype = value; }
+            get;
         }
 
         public int ZoneId
@@ -270,7 +260,7 @@ namespace TapIt_Win8
 #endif
         public virtual void DeviceOrientationChanged(
 #if WINDOWS_PHONE
-            PageOrientation 
+PageOrientation
 #elif WIN8
 DisplayOrientations
 #endif
@@ -315,7 +305,7 @@ DisplayOrientations
 
 
             // local server url. // temp code for testing purpose
-           // string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=14702&format=Json";
+            //string AdSrvURL = "http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php?zone=30647&format=Json";
             Debug.WriteLine("Server Url: " + AdSrvURL);
 
             return AdSrvURL;
@@ -332,7 +322,7 @@ DisplayOrientations
                 {
                     Exception ex = new Exception(
 #if WINDOWS_PHONE
-            TapItResource.ErrorResponse 
+TapItResource.ErrorResponse
 #elif WIN8
 ResourceStrings.ErrorResponse
 #endif

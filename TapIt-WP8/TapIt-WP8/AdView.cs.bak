@@ -178,6 +178,7 @@ namespace TapIt_Win8
             //add webcontrol to grid
             _maingrid.Children.Add(_webBrowser);
 
+            _webBrowser.VerticalAlignment = VerticalAlignment.Top;
             //events  for main grid
             _maingrid.SizeChanged += _maingrid_SizeChanged;
         }
@@ -198,11 +199,15 @@ namespace TapIt_Win8
             _webBrowser.Height = height;
             _webBrowser.Width = width;
 
+
+            //#if WINDOWS_PHONE
             if (JsonToHtml(GetOrientationWidth(), height)) // set new viewport
             {
                 IsInternalLoad = true;
                 NavigateToHtml();
             }
+            //#endif
+
         }
 
         /// <summary>
