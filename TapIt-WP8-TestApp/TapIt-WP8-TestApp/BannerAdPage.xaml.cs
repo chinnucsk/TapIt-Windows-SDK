@@ -39,14 +39,14 @@ namespace TapIt_WP8_TestApp
             _bannerAdView = new BannerAdView();
 
             _bannerAdView.Visible = Visibility.Collapsed;
-            _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-            //_bannerAdView.ZoneId = 15087;                  //zone id for local server
+           // _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
+            _bannerAdView.ZoneId = 29318;                  //zone id for local server
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
-            _bannerAdView.UrlAdditionalParameters["param1"] = "value1";
-            _bannerAdView.UrlAdditionalParameters["param2"] = "value2";
-            _bannerAdView.UrlAdditionalParameters["param3"] = "value3";
+            //_bannerAdView.UrlAdditionalParameters["param1"] = "value1";
+            //_bannerAdView.UrlAdditionalParameters["param2"] = "value2";
+            //_bannerAdView.UrlAdditionalParameters["param3"] = "value3";
 
             //attached events
             _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;

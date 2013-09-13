@@ -39,8 +39,8 @@ namespace TapIt_WP8_TestApp
             _interstitialAdView = new InterstitialAdView();
 
             _interstitialAdView.Visible = Visibility.Collapsed;
-            _interstitialAdView.ZoneId = 25253;   //zone id for TapIt
-            //_interstitialAdView.ZoneId = 15093;     ////zone id for local server
+            //_interstitialAdView.ZoneId = 25253;   //zone id for TapIt
+            _interstitialAdView.ZoneId = 30647;     ////zone id for local server
 
             LayoutRoot.Children.Add(_interstitialAdView.ViewControl);
             //SystemTray.SetIsVisible(this, false);
