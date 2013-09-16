@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>RAGINIK</Machine>
+    <WindowsUser>raginik</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\TapIt-Win8-TestApp.exe">
+      <PackagePath>TapIt-Win8-TestApp.exe</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\TapIt-Win8-TestApp.pdb">
+      <PackagePath>TapIt-Win8-TestApp.pdb</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8\TapIt-Win8\bin\Debug\TapIt-Win8.pdb">
+      <PackagePath>TapIt-Win8.pdb</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8\TapIt-Win8\bin\Debug\TapIt-Win8.dll">
+      <PackagePath>TapIt-Win8.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\Assets\Logo.png">
+      <PackagePath>Assets\Logo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\Assets\SmallLogo.png">
+      <PackagePath>Assets\SmallLogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\Assets\SplashScreen.png">
+      <PackagePath>Assets\SplashScreen.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\Assets\StoreLogo.png">
+      <PackagePath>Assets\StoreLogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\ImagesFolder\back-arrow.png">
+      <PackagePath>ImagesFolder\back-arrow.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\ImagesFolder\TapItLogo.png">
+      <PackagePath>ImagesFolder\TapItLogo.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\ImagesFolder\TapIt-title.png">
+      <PackagePath>ImagesFolder\TapIt-title.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\ImagesFolder\TitleBackground.png">
+      <PackagePath>ImagesFolder\TitleBackground.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-WP8\TapIt-WP8\Images\interstitial_close_button%402x.png">
+      <PackagePath>TapIt-Win8\Images\interstitial_close_button%402x.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\ImagesFolder\Background.jpg">
+      <PackagePath>ImagesFolder\Background.jpg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\App.xaml">
+      <PackagePath>App.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\AdPromptPage.xaml">
+      <PackagePath>AdPromptPage.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\BannerAdPage.xaml">
+      <PackagePath>BannerAdPage.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\Common\StandardStyles.xaml">
+      <PackagePath>Common\StandardStyles.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\InterstitialAdPage.xaml">
+      <PackagePath>InterstitialAdPage.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\MainPage.xaml">
+      <PackagePath>MainPage.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\TapIt-Windows8\TapIt\TapIt-Win8-TestApp\TapIt-Win8-TestApp\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>

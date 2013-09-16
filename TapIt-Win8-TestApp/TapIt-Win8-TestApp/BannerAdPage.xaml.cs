@@ -50,8 +50,8 @@ namespace TapIt_Win8_TestApp
             _bannerAdView = new BannerAdView();
 
             //_bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-            //_bannerAdView.ZoneId = 14702;                  //zone id for local server
-            _bannerAdView.ZoneId = 29318;
+            _bannerAdView.ZoneId = 14702;                  //zone id for local server
+            //_bannerAdView.ZoneId = 29318;
             _bannerAdView.Visible = Visibility.Collapsed;
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
 
@@ -66,16 +66,8 @@ namespace TapIt_Win8_TestApp
             _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
             _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
             _bannerAdView.NavigationFailed += _bannerAdView_NavigationFailed;
-            //_bannerAdView.SetAdSize(728, 90);
-            _bannerAdView.SetAdSize(300, 250);
-            //_bannerAdView.SetAdSize(320, 50);
-
-            ContentPanel.SizeChanged += ContentPanel_SizeChanged;
-        }
-
-        void ContentPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-
+          
+            _bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.MediumRect);
         }
 
         #endregion
@@ -169,21 +161,11 @@ namespace TapIt_Win8_TestApp
             _bannerAdView.Visible = Visibility.Collapsed;
         }
 
-        /////<summary>
-        /////This event is fired when the app came to foreground
-        /////</summary>
-        //private void BannerAdPage_AppActivated(object sender, EventArgs e)
-        //{
-        //    _bannerAdView.AppActivated();
-        //}
-
-        /////<summary>
-        /////This event is fired just before the app will be sent to the background.
-        /////</summary>
-        //void BannerAdPage_AppDeactivated(object sender, EventArgs e)
-        //{
-        //    _bannerAdView.AppDeactivated();
-        //}
+        private void installBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Tracker tracker = Tracker.Instance;
+            Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
+        }
 
         #endregion
     }
