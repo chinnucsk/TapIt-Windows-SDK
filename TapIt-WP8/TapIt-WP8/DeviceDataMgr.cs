@@ -53,7 +53,6 @@ namespace TapIt_Win8
         private static DeviceDataMgr _instance;
         Version _version;
 #if WINDOWS_PHONE
-
         PageOrientation _pageOrientation = PageOrientation.None;
 #elif WIN8
         DisplayOrientations _pageOrientation = DisplayOrientations.None;
@@ -432,13 +431,33 @@ namespace TapIt_Win8
             }
 #elif WIN8
             Geolocator geolocator = new Geolocator();
-            //geolocator.PositionChanged += geolocator_PositionChanged;
-            if (geolocator.LocationStatus != PositionStatus.Disabled)
+            try
             {
                 Geoposition pos = await geolocator.GetGeopositionAsync();
-                _latitude = pos.Coordinate.Latitude;
-                _longitude = pos.Coordinate.Longitude;
-                bRet = true;
+                if (PositionStatus.Ready == geolocator.LocationStatus)
+                {
+                    _latitude = pos.Coordinate.Latitude;
+                    _longitude = pos.Coordinate.Longitude;
+                    bRet = true;
+                }
+            }
+            catch (Exception)
+            {
+                switch (geolocator.LocationStatus)
+                {
+                    case PositionStatus.Disabled:
+                        Debug.WriteLine(ResourceStrings.Location_Disabled);
+                        break;
+                    case PositionStatus.NotAvailable:
+                        Debug.WriteLine(ResourceStrings.Location_Service_Unavailable);
+                        break;
+                    case PositionStatus.NoData:
+                        Debug.WriteLine(ResourceStrings.Location_Data_Unavailable);
+                        break;
+                    default:
+                        Debug.WriteLine(ResourceStrings.Location_Failed);
+                        break;
+                }
             }
 #endif
             return bRet;

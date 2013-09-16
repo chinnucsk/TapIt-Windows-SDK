@@ -48,6 +48,7 @@ namespace TapIt_Win8
         private Storyboard _storyboard = new Storyboard();
         private DoubleAnimation _doubleAnimation = new DoubleAnimation();
         private PlaneProjection _planeProjection = new PlaneProjection();
+        protected BannerAdtype _bannerAdtype = BannerAdtype.LeaderBoard;
 
         #endregion
 
@@ -121,12 +122,23 @@ namespace TapIt_Win8
 
         #endregion
 
+        #region Enum
+
+        public enum BannerAdtype
+        {
+            LeaderBoard,
+            MediumRect,
+            Banners
+        }
+
+        #endregion
+
         #region methods
 
         /// <summary>
         /// set size for ad - to support multiple sizes for banner ad
         /// </summary>
-        public void SetAdSize(int width, int height)
+        protected void SetAdSize(int width, int height)
         {
             AdHeight = height;
             AdWidth = width;
@@ -138,6 +150,22 @@ namespace TapIt_Win8
         private void SetControlHeight(int height)
         {
             Height = height + 2;
+        }
+
+        public void SetBannerAdSize(BannerAdtype _bannerAdtype)
+        {
+            switch (_bannerAdtype)
+            {
+                case BannerAdtype.LeaderBoard:
+                    SetAdSize(728, 90);
+                    break;
+                case BannerAdtype.MediumRect:
+                    SetAdSize(300, 250);
+                    break;
+                case BannerAdtype.Banners:
+                    SetAdSize(320, 50);
+                    break;
+            }
         }
 
 #if WINDOWS_PHONE
@@ -183,6 +211,18 @@ namespace TapIt_Win8
                     }
                     else
                     {
+#if WIN8
+                        try
+                        {
+                            int receivedAdHeight = Convert.ToInt32(JsonResponse.adHeight);
+                            if (receivedAdHeight != AdHeight)
+                                SetControlHeight(receivedAdHeight);
+                        }
+                        catch (Exception)
+                        {
+                            // continue even if exception occurs.
+                        }
+#endif
                         NavigateToHtml();
                     }
                 }

@@ -278,9 +278,7 @@ DisplayOrientations
 
             // url creation using tapIt base url.
             string AdSrvURL = BaseURL + "?" +
-                "w=" + AdWidth +
-                "&h=" + AdHeight +
-                "&languages=" + deviceData.Language +
+                "languages=" + deviceData.Language +
                 "&ua=" + WebUtility.UrlEncode(deviceData.UserAgent) +
                 "&udid=" + deviceData.DeviceID +
                 "&connection_speed=" + deviceData.ConnectionSpd +
@@ -290,10 +288,15 @@ DisplayOrientations
  "&sdk=" + _sdkversion +
                 "&format=" + Format +
                 "&zone=" + ZoneId +
-                "&adtype=" + Convert.ToInt32(Adtype) +
+                //"&adtype=" + Convert.ToInt32(Adtype) +
                 "&o=" + deviceData.PageOrientationVal +
                 "&lat=" + deviceData.Latitude +
                 "&long=" + deviceData.Longitude;
+            if (AdWidth > 0 &&
+                    AdHeight > 0)
+            {
+                AdSrvURL += ("&w=" + AdWidth + "&h=" + AdHeight);
+            }
 
             for (int i = 0; i < UrlAdditionalParameters.Count; i++)
             {
@@ -318,15 +321,21 @@ DisplayOrientations
             {
                 TapItHttpRequest req = new TapItHttpRequest();
                 string response = await req.HttpRequest(await GetAdSrvURL());
-                if (response == null || response.Contains("error"))
+
+                if (response == null)
                 {
                     Exception ex = new Exception(
 #if WINDOWS_PHONE
-TapItResource.ErrorResponse
+                        TapItResource.ErrorResponse
 #elif WIN8
 ResourceStrings.ErrorResponse
 #endif
 );
+                    throw ex;
+                }
+                else if (response.Contains("error"))
+                {
+                    Exception ex = new Exception(response);
                     throw ex;
                 }
 

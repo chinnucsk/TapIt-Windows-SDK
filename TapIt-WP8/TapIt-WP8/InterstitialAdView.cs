@@ -169,7 +169,6 @@ namespace TapIt_Win8
         }
 
 #endif
-
         private void AddCloseButton()
         {
             _closeBtn = new Image();
@@ -207,7 +206,6 @@ namespace TapIt_Win8
             SetSizeToScreen(true);
         }
 #endif
-
         #endregion
 
         #region Events
