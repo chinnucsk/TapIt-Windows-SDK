@@ -67,7 +67,7 @@ namespace TapIt_Win8_TestApp
             _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
             _bannerAdView.NavigationFailed += _bannerAdView_NavigationFailed;
           
-            _bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.MediumRect);
+            //_bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.Banners);
         }
 
         #endregion
@@ -147,6 +147,7 @@ namespace TapIt_Win8_TestApp
         private void loadBtn_Click(object sender, RoutedEventArgs e)
         {
             ProgressRing1.Visibility = Visibility.Visible;
+            _bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.LeaderBoard);
             Task<bool> disply = _bannerAdView.Load();
         }
 
@@ -165,6 +166,20 @@ namespace TapIt_Win8_TestApp
         {
             Tracker tracker = Tracker.Instance;
             Task<bool> isInstalled = tracker.ReportInstall("offer_txt");
+        }
+
+        private void midRectBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ProgressRing1.Visibility = Visibility.Visible;
+            _bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.MediumRect);
+            Task<bool> disply = _bannerAdView.Load();
+        }
+
+        private void bannerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ProgressRing1.Visibility = Visibility.Visible;
+            _bannerAdView.SetBannerAdSize(BannerAdView.BannerAdtype.Banners);
+            Task<bool> disply = _bannerAdView.Load();
         }
 
         #endregion
