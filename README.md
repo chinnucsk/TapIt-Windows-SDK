@@ -1,4 +1,4 @@
-TapIt Windows Phone SDK
+TapIt Windows SDK
 =======================
 Version 1.0.1
 
