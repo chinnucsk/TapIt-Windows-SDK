@@ -23,6 +23,13 @@ namespace TapIt_WP8
 namespace TapIt_Win8
 #endif
 {
+
+    public enum ModeType
+    {
+        test,
+        live
+    }
+
     public abstract class AdViewBase
     {
         #region DataMember
@@ -39,6 +46,10 @@ namespace TapIt_Win8
 
         protected AdType _adtype = AdType.Unknown;
         private int _zoneId = -1;
+        private ModeType _mode = ModeType.live;
+
+
+
 #if WINDOWS_PHONE
         //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
         private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
@@ -110,6 +121,12 @@ namespace TapIt_Win8
         #endregion
 
         #region Property
+
+        public ModeType Mode
+        {
+            get { return _mode; }
+            set { _mode = value; }
+        }
 
         public Dictionary<string, string> UrlAdditionalParameters
         {
@@ -239,6 +256,7 @@ namespace TapIt_Win8
         #endregion
 
         #region Methods
+
 #if WINDOWS_PHONE
         public void OnInAppBrowserClosed(object obj)
         {
@@ -291,7 +309,8 @@ DisplayOrientations
                 //"&adtype=" + Convert.ToInt32(Adtype) +
                 "&o=" + deviceData.PageOrientationVal +
                 "&lat=" + deviceData.Latitude +
-                "&long=" + deviceData.Longitude;
+                "&long=" + deviceData.Longitude +
+                "&mode=" + Mode;
             if (AdWidth > 0 &&
                     AdHeight > 0)
             {
@@ -326,7 +345,7 @@ DisplayOrientations
                 {
                     Exception ex = new Exception(
 #if WINDOWS_PHONE
-                        TapItResource.ErrorResponse
+TapItResource.ErrorResponse
 #elif WIN8
 ResourceStrings.ErrorResponse
 #endif

@@ -128,7 +128,10 @@ namespace TapIt_Win8
         {
             get
             {
-                _pageOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                if (Application.Current.RootVisual != null)
+                {
+                    _pageOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                }
                 return _pageOrientation;
             }
             set
@@ -353,7 +356,10 @@ namespace TapIt_Win8
             try
             {
 #if WINDOWS_PHONE
-                DeviceOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                if (Application.Current.RootVisual != null)
+                {
+                    DeviceOrientation = ((PhoneApplicationFrame)Application.Current.RootVisual).Orientation;
+                }
 
                 // _mobileOperator = "Android"; // temp code for test purpose
                 _mobileOperator = DeviceNetworkInformation.CellularMobileOperator;

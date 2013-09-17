@@ -43,13 +43,18 @@ namespace TapIt_Win8
         //banner ad animation data members
         private int _animationTimeInterval = 60;
         private int _animationDuration = 3;
-        private bool _IsLeftToRight = true;
+
         private DispatcherTimer _animationTimer = new DispatcherTimer();
         private Storyboard _storyboard = new Storyboard();
         private DoubleAnimation _doubleAnimation = new DoubleAnimation();
         private PlaneProjection _planeProjection = new PlaneProjection();
-        protected BannerAdtype _bannerAdtype = BannerAdtype.LeaderBoard;
+#if WIN8
+        private BannerAdtype _bannerAdtype = BannerAdtype.LeaderBoard;
+#endif
 
+#if WINDOWS_PHONE
+        //private bool _IsLeftToRight = true;
+#endif
         #endregion
 
         #region Property
@@ -114,16 +119,17 @@ namespace TapIt_Win8
         public BannerAdView()
         {
             SetAdSize(_bannerWidth, _bannerHeight);
-#if WINDOWS_PHONE
             RotateBannerAd();
-#endif
+            //#if WINDOWS_PHONE
+            //            RotateBannerAd();
+            //#endif
 
         }
 
         #endregion
 
         #region Enum
-
+#if WIN8
         public enum BannerAdtype
         {
             LeaderBoard,
@@ -131,6 +137,7 @@ namespace TapIt_Win8
             Banners
         }
 
+#endif
         #endregion
 
         #region methods
@@ -149,12 +156,13 @@ namespace TapIt_Win8
 
         private void SetControlHeight(int height)
         {
-            Height = height + 2;
+            Height = height + 4;
         }
-
-        public void SetBannerAdSize(BannerAdtype _bannerAdtype)
+#if WIN8
+        public void SetBannerAdSize(BannerAdtype bannerAdtype)
         {
-            switch (_bannerAdtype)
+            _bannerAdtype = bannerAdtype;
+            switch (bannerAdtype)
             {
                 case BannerAdtype.LeaderBoard:
                     SetAdSize(728, 90);
@@ -167,24 +175,25 @@ namespace TapIt_Win8
                     break;
             }
         }
+#endif
 
 #if WINDOWS_PHONE
-        /// <summary>
-        /// animation for banner ad
-        /// </summary>
-        private void RotateBannerAd()
-        {
-            _animationTimer.Tick += dispatcherTimer_Tick;
-            _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
-            _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
+        ///// <summary>
+        ///// animation for banner ad
+        ///// </summary>
+        //private void RotateBannerAd()
+        //{
+        //    _animationTimer.Tick += dispatcherTimer_Tick;
+        //    _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
+        //    _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
 
-            WebBrowser.Projection = _planeProjection;
-            Storyboard.SetTarget(_doubleAnimation, WebBrowser.Projection);
-            Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationYProperty));
-            _storyboard.Children.Add(_doubleAnimation);
-            _storyboard.Completed += _storyboard_Completed;
-            _animationTimer.Start();
-        }
+        //    WebBrowser.Projection = _planeProjection;
+        //    Storyboard.SetTarget(_doubleAnimation, WebBrowser.Projection);
+        //    Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationYProperty));
+        //    _storyboard.Children.Add(_doubleAnimation);
+        //    _storyboard.Completed += _storyboard_Completed;
+        //    _animationTimer.Start();
+        //}
 
         /// <summary>
         /// orientation change 
@@ -195,6 +204,26 @@ namespace TapIt_Win8
             SetSizeToScreen();
         }
 #endif
+        /// <summary>
+        /// animation for banner ad
+        /// </summary>
+        private void RotateBannerAd()
+        {
+            _animationTimer.Tick += dispatcherTimer_Tick;
+            _animationTimer.Interval = new TimeSpan(0, 0, AnimationTimeInterval);
+
+#if WINDOWS_PHONE
+            _doubleAnimation.Duration = new Duration(TimeSpan.FromSeconds(AnimationDuration));
+            WebBrowser.Projection = _planeProjection;
+            Storyboard.SetTarget(_doubleAnimation, WebBrowser.Projection);
+            Storyboard.SetTargetProperty(_doubleAnimation, new PropertyPath(PlaneProjection.RotationYProperty));
+            _storyboard.Children.Add(_doubleAnimation);
+            _storyboard.Completed += _storyboard_Completed;
+
+#endif
+            _animationTimer.Start();
+        }
+
 
         public override async Task<bool> Load(bool bRaiseError = true)
         {
@@ -240,12 +269,15 @@ namespace TapIt_Win8
 
         #region Event
 
-        void _storyboard_Completed(object sender, EventArgs e)
-        {
-            _IsLeftToRight = !_IsLeftToRight;
-        }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+
+        private void dispatcherTimer_Tick(object sender,
+#if WINDOWS_PHONE
+ EventArgs
+#elif WIN8
+            object
+#endif
+ e)
         {
             if (this.Visible == Visibility.Collapsed)
                 return;
@@ -264,6 +296,11 @@ namespace TapIt_Win8
             _doubleAnimation.To = 0;
 
             _storyboard.Begin();
+        }
+
+        void _storyboard_Completed(object sender, EventArgs e)
+        {
+            //_IsLeftToRight = !_IsLeftToRight;
         }
 
         #endregion
