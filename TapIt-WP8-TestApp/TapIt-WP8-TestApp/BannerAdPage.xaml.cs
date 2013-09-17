@@ -39,8 +39,8 @@ namespace TapIt_WP8_TestApp
             _bannerAdView = new BannerAdView();
 
             _bannerAdView.Visible = Visibility.Collapsed;
-           // _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-            _bannerAdView.ZoneId = 29318;                  //zone id for local server
+            // _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
+            _bannerAdView.ZoneId = 14702;                  //zone id for local server
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
@@ -52,13 +52,13 @@ namespace TapIt_WP8_TestApp
             _bannerAdView.ControlLoaded += _bannerAdView_controlLoaded;
             _bannerAdView.ContentLoaded += _bannerAdView_contentLoaded;
             _bannerAdView.ErrorEvent += _bannerAdView_errorEvent;
-            _bannerAdView.NavigatingToInAppBrowser +=_bannerAdView_NavigatingEvent;
+            _bannerAdView.NavigatingToInAppBrowser += _bannerAdView_NavigatingEvent;
             _bannerAdView.Navigated += _bannerAdView_navigated;
             _bannerAdView.NavigationFailed += _bannerAdView_navigationFailed;
             _bannerAdView.InAppBrowserClosed += _bannerAdView_InAppBrowserClosed;
         }
 
-        
+
         #endregion
 
         #region methods
@@ -173,7 +173,7 @@ namespace TapIt_WP8_TestApp
             progressring.Visibility = Visibility.Visible;
             //_bannerAdView.AnimationTimeInterval = 10;
             //_bannerAdView.AnimationDuration = 4;
-           Task<bool> disply = _bannerAdView.Load();
+            Task<bool> disply = _bannerAdView.Load();
         }
 
         private void showBtn_Click(object sender, RoutedEventArgs e)

@@ -13,39 +13,53 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True" Unloaded="PhoneApplicationPage_Unloaded_1">
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="0" Height="120">
-            <StackPanel.Background>
-                <ImageBrush Stretch="Fill" ImageSource="/images/TapIt-title.png"/>
-            </StackPanel.Background>
-
-            <!--<TextBlock Text="tapIt" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="BannerAd" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>-->
-        </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,-5">
-            <Grid.Background>
-                <ImageBrush Stretch="Fill" ImageSource="/images/Background.jpg"/>
-            </Grid.Background>
+    <Grid>
+        <!--LayoutRoot is the root grid where all page content is placed-->
+        <Grid x:Name="LayoutRoot" Background="Transparent">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100*"></RowDefinition>
-                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock HorizontalAlignment="Left"  TextWrapping="Wrap" Text="Banner Ad" VerticalAlignment="Top" Height="52" Width="203" FontSize="42" Foreground="#FF0C64AE" Margin="121,0,0,0"/>
-            <Button Content="Hide" Visibility="Visible" Name="hideBtn" HorizontalAlignment="Left" Margin="242,69,0,0" VerticalAlignment="Top" Width="112" Click="hideBtn_Click" Background="#FF3169E0"/>
-            <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79" Margin="0,295,0,0" VerticalAlignment="Top" Width="480" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
-            <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left" Margin="0,69,0,0" VerticalAlignment="Top" Click="loadBtn_Click" Width="112" Background="#FF3169E0"/>
-            <Button Content="Show" x:Name="showBtn" HorizontalAlignment="Left" Margin="121,69,0,0" VerticalAlignment="Top"  Width="112" Background="#FF3169E0" Click="showBtn_Click"/>
+
+            <!--TitlePanel contains the name of the application and page title-->
+            <StackPanel Grid.Row="0" Margin="0" Height="120">
+                <StackPanel.Background>
+                    <ImageBrush Stretch="Fill" ImageSource="/images/TapIt-title.png"/>
+                </StackPanel.Background>
+
+                <!--<TextBlock Text="tapIt" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="BannerAd" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>-->
+            </StackPanel>
+
+            <!--ContentPanel - place additional content here-->
+            <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,-5">
+                <Grid.Background>
+                    <ImageBrush Stretch="Fill" ImageSource="/images/Background.jpg"/>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center"  TextWrapping="Wrap" Text="Banner Ad" VerticalAlignment="Top"  FontSize="42" Foreground="#FF0C64AE"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left" VerticalAlignment="Top" Click="loadBtn_Click" Width="112" Background="#FF3169E0"/>
+                        <Button Content="Show" x:Name="showBtn" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="112" Background="#FF3169E0" Click="showBtn_Click"/>
+                        <Button Content="Hide" Visibility="Visible" Name="hideBtn" HorizontalAlignment="Left" VerticalAlignment="Top" Width="112" Click="hideBtn_Click" Background="#FF3169E0"/>
+                    </StackPanel>
+                    <Button Grid.Row="2" Content="Track Install" x:Name="installBtn" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Background="#FF3169E0" Click="installBtn_Click"/>
+                </Grid>
+            </Grid>
+
         </Grid>
-        <Button Content="Track Install" x:Name="installBtn" HorizontalAlignment="Left" Margin="2,129,0,0" VerticalAlignment="Top" Width="200" Background="#FF3169E0" Grid.Row="1" Click="installBtn_Click"/>
+        <ProgressBar IsIndeterminate="True" Visibility="Collapsed" HorizontalAlignment="Left" Height="79"  VerticalAlignment="Center" Width="480" Name="progressring" SmallChange="1" Value="100" Foreground="#FFE50000" BorderThickness="4,5,5,5" Maximum="101"/>
     </Grid>
 
 </phone:PhoneApplicationPage>
