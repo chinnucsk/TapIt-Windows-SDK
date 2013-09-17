@@ -51,14 +51,14 @@ namespace TapIt_Win8
 
 
 #if WINDOWS_PHONE
-        //private string _baseURL = TapItResource.BaseUrl; //TapIt server url
-        private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
+        private string _baseURL = TapItResource.BaseUrl; //TapIt server url
+        //private string _baseURL = TapItResource.BaseUrl_Local; //Local server url
         private string _format = TapItResource.Format;
         private string _sdkversion = TapItResource.SdkVersion;
 #elif WIN8
 
-        //private string _baseURL = Utility.BaseUrl; //TapIt server url
-        private string _baseURL = ResourceStrings.BaseUrl_Local; //Local server url
+        private string _baseURL = ResourceStrings.BaseUrl; //TapIt server url
+        //private string _baseURL = ResourceStrings.BaseUrl_Local; //Local server url
         private string _format = ResourceStrings.Format;
         private string _sdkversion = ResourceStrings.SdkVersion;
 #endif

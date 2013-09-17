@@ -400,7 +400,7 @@ namespace TapIt_Win8
             bool isLoaded = false;
             try
             {
-                string response = JsonResponse.Html;
+                string response = WebUtility.UrlDecode(JsonResponse.Html);
                 JsonParser jsnParser = new JsonParser();
                 _htmlResponse = jsnParser.WrapToHTML(response, JsonResponse,
                     ViewPortWidth, ViewPortHeight);

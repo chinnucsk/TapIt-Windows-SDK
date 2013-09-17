@@ -121,10 +121,7 @@
     <value>No Data Available for AdPrompt</value>
   </data>
   <data name="BaseUrl" xml:space="preserve">
-    <value>http://dev.tapit.com/~npenteado/adrequest.php</value>
-  </data>
-  <data name="BaseUrl_Local" xml:space="preserve">
-    <value>http://ec2-107-20-3-62.compute-1.amazonaws.com/~chetanch/adrequest.php</value>
+    <value>http://r.tapit.com/adrequest.php</value>
   </data>
   <data name="AdControlName" xml:space="preserve">
     <value>TapItAdViewControl</value>
@@ -142,7 +139,7 @@
     <value>Please Load New Ad</value>
   </data>
   <data name="SdkVersion" xml:space="preserve">
-    <value>wp-v1.0.0</value>
+    <value>wp-v1.0.1</value>
   </data>
   <data name="SuccessMesg" xml:space="preserve">
     <value>Success</value>

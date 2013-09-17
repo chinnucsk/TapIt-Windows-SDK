@@ -43,6 +43,7 @@ namespace TapIt_Win8_TestApp
             _AdPromptView.Visible = Visibility.Collapsed;
 
             _AdPromptView.ZoneId = 15025; //zone id for local server
+            _AdPromptView.Mode = ModeType.test;
 
             _AdPromptView.ControlLoaded += _AdPromptView_loaded;
             _AdPromptView.ContentLoaded += _AdPromptView_LoadCompleted;

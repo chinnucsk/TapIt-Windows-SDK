@@ -33,8 +33,8 @@ namespace TapIt_WP8_TestApp
             _AdPromptView = new AdPromptView();
 
             _AdPromptView.Visible = Visibility.Collapsed;
-            _AdPromptView.ZoneId = 15025; //zone id for local server
-            //_AdPromptView.ZoneId = 25254;//zone id for TapIt server
+            _AdPromptView.ZoneId = 25254;//zone id for TapIt server
+            _AdPromptView.Mode = ModeType.test;
 
            // LayoutRoot.Children.Add(_AdPromptView.ViewControl);
 

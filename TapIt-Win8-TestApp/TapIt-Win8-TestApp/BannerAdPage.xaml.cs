@@ -49,9 +49,9 @@ namespace TapIt_Win8_TestApp
             //Initialize the view
             _bannerAdView = new BannerAdView();
 
-            //_bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
-            _bannerAdView.ZoneId = 14702;                  //zone id for local server
-            //_bannerAdView.ZoneId = 29318;
+            _bannerAdView.ZoneId = 25252;//2720;          //zone id for TapIt
+            _bannerAdView.Mode = ModeType.test;
+
             _bannerAdView.Visible = Visibility.Collapsed;
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
             _bannerAdView.Mode = ModeType.live;
