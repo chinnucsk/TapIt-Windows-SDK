@@ -54,7 +54,8 @@ namespace TapIt_Win8_TestApp
             //_bannerAdView.ZoneId = 29318;
             _bannerAdView.Visible = Visibility.Collapsed;
             _bannerAdView.ViewControl.SetValue(Grid.RowProperty, 2);
-
+            _bannerAdView.Mode = ModeType.live;
+            
             ContentPanel.Children.Add(_bannerAdView.ViewControl);
 
             //_bannerAdView.UrlAdditionalParameters["param1"] = "value1";

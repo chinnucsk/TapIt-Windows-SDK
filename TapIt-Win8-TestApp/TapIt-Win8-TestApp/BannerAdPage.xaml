@@ -47,13 +47,13 @@
                         <Button Content="Banner" Visibility="Visible" Name="bannerBtn" HorizontalAlignment="Left" Margin="50,0,0,0"  VerticalAlignment="Top" Width="200" Height="80" FontSize="28"  Background="Blue" Click="bannerBtn_Click"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,10,0,0">
-                        
+
                         <Button Content="Show" x:Name="showBtn" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="80" FontSize="28" Background="Blue" Click="showBtn_Click" />
                         <Button Content="Hide" Visibility="Visible" Name="hideBtn" HorizontalAlignment="Left" Margin="50,0,0,0"  VerticalAlignment="Top" Width="200" Height="80" FontSize="28"  Background="Blue" Click="hideBtn_Click" />
                         <Button Content="Track Install" x:Name="installBtn" Margin="50,0,0,0"  HorizontalAlignment="Left"  VerticalAlignment="Top" Width="200" Background="Blue" Height="80" FontSize="28" Click="installBtn_Click"/>
                     </StackPanel>
                 </Grid>
-                <StackPanel HorizontalAlignment="Center" Height="148"  VerticalAlignment="Center" Width="460">
+                <StackPanel Margin="0,0,0,50" HorizontalAlignment="Center" Height="148"  VerticalAlignment="Bottom" Width="460">
                     <StackPanel.Background>
                         <ImageBrush Stretch="Fill" ImageSource="/ImagesFolder/TapItLogo.png"/>
                     </StackPanel.Background>

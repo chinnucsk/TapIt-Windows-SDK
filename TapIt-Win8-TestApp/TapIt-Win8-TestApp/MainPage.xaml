@@ -21,7 +21,7 @@
                 <Grid.Background>
                     <ImageBrush Stretch="Fill" ImageSource="/ImagesFolder/Background.jpg"/>
                 </Grid.Background>
-                <StackPanel HorizontalAlignment="Center" Height="148"  VerticalAlignment="Center" Width="460">
+                <StackPanel Margin="0,0,0,50" HorizontalAlignment="Center" Height="148"  VerticalAlignment="Bottom" Width="460">
                     <StackPanel.Background>
                         <ImageBrush Stretch="Fill" ImageSource="/ImagesFolder/TapItLogo.png"/>
                     </StackPanel.Background>

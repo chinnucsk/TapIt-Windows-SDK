@@ -39,7 +39,7 @@
                     <Button Content="Load" Name="loadBtn" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="200" Height="80" FontSize="28" Background="Blue" Click="loadBtn_Click" />
                     <Button Content="Show" x:Name="showBtn" Margin="50,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top"  Width="200" Height="80" FontSize="28" Background="Blue" Click="showBtn_Click" Grid.ColumnSpan="2" />
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Center" Height="148"  VerticalAlignment="Center" Width="460" >
+                <StackPanel Margin="0,0,0,50" HorizontalAlignment="Center" Height="148"  VerticalAlignment="Bottom" Width="460" >
                     <StackPanel.Background>
                         <ImageBrush Stretch="Fill" ImageSource="/ImagesFolder/TapItLogo.png"/>
                     </StackPanel.Background>
